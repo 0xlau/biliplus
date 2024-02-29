@@ -22,10 +22,10 @@
   <p align="center">
     A Chrome extension to make better in bilibili.com
     <br />
-    <a href="https://chromewebstore.google.com/"><strong>Explore the chrome web store »</strong></a>
+    <a href="https://chrome.google.com/webstore/detail/liddcdcjkpeaiblhebgihpmcaknpgbgk"><strong>Explore the chrome web store »</strong></a>
     <br />
     <br />
-    <a href="https://chromewebstore.google.com/">Chrome Extension</a>
+    <a href="https://chrome.google.com/webstore/detail/liddcdcjkpeaiblhebgihpmcaknpgbgk">Chrome Extension</a>
     ·
     <a href="https://github.com/0xlau/biliplus/issues">Report Bug</a>
     ·
@@ -83,11 +83,9 @@ To get a local copy up and working follow these simple example steps.
 
 ### Install From Web Store
 
-1. Open the [Chrome Web Store](https://chromewebstore.google.com/).
-2. In the left column, click Extensions.
-3. Browse or search an extension called `biliplus`.
-4. click `Add to Chrome`.
-5. If you're adding an extension:
+1. Open the [Chrome Web Store](https://chrome.google.com/webstore/detail/liddcdcjkpeaiblhebgihpmcaknpgbgk).
+2. click `Add to Chrome`.
+3. If you're adding an extension:
     * Review the types of data that the extension will be able to access.
     * Click Add extension.
 You'll see your extensions in Chrome as buttons on the toolbar.
