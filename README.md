@@ -62,7 +62,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Screen Shot][product-screenshot]](https://0xlau.dev)
+<div align="center">
+  <img src="img/screenshot.png"/>
+</div>
 
 [Bilibili.com](https://bilibili.com) actually has a perfect user experience, but as a developer who pays attention to details, there may still be some areas that make us uncomfortable, so this extension was born.
 
@@ -200,5 +202,3 @@ Project Link: [https://github.com/0xlau/biliplus](https://github.com/0xlau/bilip
 [license-url]: https://github.com/0xlau/biliplus/blob/master/LICENSE.txt
 [chrome-shield]: https://img.shields.io/badge/-Plugin_Download-black.svg?style=for-the-badge&colorB=555
 [chrome-url]: https://chrome.com/
-
-[product-screenshot]: img/screenshot.png
