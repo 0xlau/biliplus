@@ -127,6 +127,7 @@ _Below is an example of how you can manual installing from source code._
 - [x] Clean Home Mode
 - [x] Feed Roll Back Button
 - [ ] Summarize video in cover list by Bilibili AI
+- [ ] Display the number of viewers on the video cover
 - [ ] ......
 
 See the [open issues](https://github.com/0xlau/biliplus/issues) for a full list of proposed features (and known issues).
