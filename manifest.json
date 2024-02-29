@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "BiliPlus - Bilibili 加大杯，细节从大杯做起",
+  "description": "专门为细节控的人群使用，只要在B站上设计不合理的地方，都可以加入到大杯中。",
+  "version": "1.0.0",
+  "icons": {
+    "128": "logo.png"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/feed-roll-history-btn.js", "scripts/clean-home-page.js"],
+      "matches": ["https://www.bilibili.com/*"],
+      "css": [
+        "css/global.css",
+        "css/feed-roll-history-btn.css",
+        "css/clean-home-page.css"
+      ]
+    }
+  ],
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "settings/settings.html",
+    "default_icon": "logo.png"
+  },
+  "author": "timothy-lau@outlook.com"
+}

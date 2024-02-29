@@ -1,0 +1,37 @@
+.feed-roll-back-btn {
+    position: absolute;
+    left: 100%;
+    top: 90px;
+    z-index: 2;
+    transform: translate(10px);
+}
+.feed-roll-back-btn .roll-btn {
+    flex-direction: column;
+    margin-left: 0;
+    height: auto;
+    width: 40px;
+    padding: 9px;
+}
+.feed-roll-back-btn .roll-btn svg {
+    margin-right: 0;
+    margin-bottom: 0px;
+}
+
+.feed-roll-next-btn {
+    position: absolute;
+    left: 100%;
+    top: 133px;
+    z-index: 2;
+    transform: translate(10px);
+}
+.feed-roll-next-btn .roll-btn {
+    flex-direction: column;
+    margin-left: 0;
+    height: auto;
+    width: 40px;
+    padding: 9px;
+}
+.feed-roll-next-btn .roll-btn svg {
+    margin-right: 0;
+    margin-bottom: 0px;
+}
