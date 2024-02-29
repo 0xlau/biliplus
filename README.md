@@ -17,10 +17,10 @@
     <img src="img/logo_128.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">BiliPlus Chrome Plugin</h3>
+  <h3 align="center">BiliPlus Extension</h3>
 
   <p align="center">
-    A Chrome plugin to make better in bilibili.com
+    A Chrome extension to make better in bilibili.com
     <br />
     <a href="https://chromewebstore.google.com/"><strong>Explore the chrome web store »</strong></a>
     <br />
