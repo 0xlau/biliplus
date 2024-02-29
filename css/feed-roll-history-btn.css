@@ -1,37 +1,24 @@
 .feed-roll-back-btn {
-    position: absolute;
-    left: 100%;
-    top: 90px;
-    z-index: 2;
-    transform: translate(10px);
-}
-.feed-roll-back-btn .roll-btn {
     flex-direction: column;
-    margin-left: 0;
-    height: auto;
+    margin-left: 0 !important;
+    height: 40px !important;
     width: 40px;
     padding: 9px;
+    margin-top: 6px;
 }
-.feed-roll-back-btn .roll-btn svg {
+.feed-roll-back-btn svg {
     margin-right: 0;
     margin-bottom: 0px;
 }
-
 .feed-roll-next-btn {
-    position: absolute;
-    left: 100%;
-    top: 133px;
-    z-index: 2;
-    transform: translate(10px);
-}
-.feed-roll-next-btn .roll-btn {
     flex-direction: column;
-    margin-left: 0;
-    height: auto;
+    margin-left: 0 !important;
+    height: 40px !important;
     width: 40px;
     padding: 9px;
+    margin-top: 6px;
 }
-.feed-roll-next-btn .roll-btn svg {
+.feed-roll-next-btn svg {
     margin-right: 0;
     margin-bottom: 0px;
 }
