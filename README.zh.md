@@ -40,20 +40,20 @@
   <summary>目录</summary>
   <ol>
     <li>
-      <a href="#about-the-project">关于项目</a>
+      <a href="#关于项目">关于项目</a>
     </li>
     <li>
-      <a href="#getting-started">快速开始</a>
+      <a href="#快速开始">快速开始</a>
       <ul>
-        <li><a href="#install-from-web-store">从扩展中心安装</a></li>
-        <li><a href="#manual-installation">手动安装</a></li>
+        <li><a href="#从扩展中心安装">从扩展中心安装</a></li>
+        <li><a href="#手动安装">手动安装</a></li>
       </ul>
     </li>
-    <li><a href="#roadmap">路线图</a></li>
-    <li><a href="#contributing">贡献</a></li>
-    <li><a href="#license">协议</a></li>
-    <li><a href="#contact">联系</a></li>
-    <li><a href="#acknowledgments">鸣谢</a></li>
+    <li><a href="#路线图">路线图</a></li>
+    <li><a href="#贡献代码">贡献代码</a></li>
+    <li><a href="#协议">协议</a></li>
+    <li><a href="#联系">联系</a></li>
+    <li><a href="#鸣谢">鸣谢</a></li>
   </ol>
 </details>
 
@@ -130,7 +130,7 @@ _以下是如何从源代码手动安装的示例。_
 <p align="right">(<a href="#readme-top">回到顶部</a>)</p>
 
 <!-- CONTRIBUTING -->
-## Contributing
+## 贡献代码
 
 具体请访问 [Github仓库查看](https://github.com/0xlau/biliplus)
 
