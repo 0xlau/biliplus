@@ -1,2 +1,2 @@
 @echo off
-tar -c -f biliplus.zip css/* scripts/* settings/* settings/css/* settings/js/* manifest.json logo.png
+tar -c -f biliplus.zip css/* scripts/* scripts/common/* settings/* settings/css/* settings/js/* manifest.json logo.png

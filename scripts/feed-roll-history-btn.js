@@ -1,3 +1,6 @@
+/**
+ * 首页“换一换”回溯功能实现
+ */
 chrome.storage.sync.get(
   ["biliplus-enable", "feed-roll-history-btn"],
   (storage) => {
