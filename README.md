@@ -127,7 +127,7 @@ _Below is an example of how you can manual installing from source code._
 - [x] Clean Home Mode
 - [x] Feed Roll Back Button
 - [ ] Summarize video in cover list by Bilibili AI
-- [ ] Display the number of viewers on the video cover
+- [x] Display the number of viewers on the video cover
 - [ ] Hide all comments from a user by userID
 - [ ] ......
 
