@@ -15,6 +15,11 @@
         "css/feed-roll-history-btn.css",
         "css/clean-home-page.css"
       ]
+    },
+    {
+      "js": ["scripts/common/utils.js", "scripts/common/bilibili-api.js", "scripts/cover-viewer.js"],
+      "matches": ["https://*.bilibili.com/*"],
+      "css": ["css/global.css"]
     }
   ],
   "permissions": ["storage"],
