@@ -17,4 +17,13 @@ $(function () {
             })
         });
     });
+
+    chrome.storage.sync.get("hide-user-comment", (storage) => {
+
+        const hideUsers = storage["hide-user-comment"];
+        if (hideUsers != null && hideUsers.length > 0){
+            $("#hide-user-comment-count").html(hideUsers.length);
+            $("#hide-user-comment-count").removeClass("hidden");
+        }
+    })
 });

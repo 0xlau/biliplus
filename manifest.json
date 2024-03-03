@@ -17,8 +17,21 @@
       ]
     },
     {
-      "js": ["scripts/common/utils.js", "scripts/common/bilibili-api.js", "scripts/cover-viewer.js"],
+      "js": [
+        "scripts/common/utils.js",
+        "scripts/common/bilibili-api.js",
+        "scripts/cover-viewer.js"
+      ],
       "matches": ["https://*.bilibili.com/*"],
+      "css": ["css/global.css"]
+    },
+    {
+      "js": [
+        "scripts/common/utils.js",
+        "scripts/common/bilibili-api.js",
+        "scripts/hide-user-comment.js"
+      ],
+      "matches": ["https://www.bilibili.com/video/*"],
       "css": ["css/global.css"]
     }
   ],
