@@ -1,0 +1,82 @@
+<html lang="zh" class="bg-base-200">
+  <head>
+    <title>BiliPlus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <link href="./css/daisyUI.css" rel="stylesheet" type="text/css" />
+    <script src="./js/common/tailwindcss.js"></script>
+    <script src="./js/common/jquery-3.7.1.min.js"></script>
+    <script src="./js/settings-hide-user-comment.js"></script>
+    <script src="../scripts/common/bilibili-api.js"></script>
+  </head>
+  <body class="w-max min-w-96">
+    <div class="navbar bg-base-100">
+      <div class="flex-1">
+        <a title="asd" class="btn btn-ghost" href="./settings.html">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-6"
+          >
+            <path
+              d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"
+            ></path>
+          </svg>
+          <span>返回</span>
+        </a>
+      </div>
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li>
+            <a
+              href="https://github.com/0xlau/biliplus/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              >提交意见</a
+            >
+          </li>
+          <li>
+            <details>
+              <summary>关于项目</summary>
+              <ul class="p-2 bg-base-100 rounded-t-none">
+                <li>
+                  <a
+                    href="https://github.com/0xlau/biliplus"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Github</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/0xlau"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >项目作者</a
+                  >
+                </li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="p-5 text-center">
+      <div class="mb-3">
+        <label
+          class="input input-bordered flex items-center gap-2 input-md w-full"
+        >
+          <input
+            id="userIdBox"
+            type="text"
+            class="grow"
+            placeholder="输入b站用户名称或uid"
+          />
+          <kbd class="kbd kbd-sm">↵ 回车添加</kbd>
+        </label>
+      </div>
+      <div class="grid grid-cols-3 gap-2" id="userList"></div>
+    </div>
+  </body>
+</html>
