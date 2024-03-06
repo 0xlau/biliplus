@@ -129,6 +129,7 @@ _Below is an example of how you can manual installing from source code._
 - [ ] Summarize video in cover list by Bilibili AI
 - [x] Display the number of viewers on the video cover
 - [x] Hide all comments from a user by userID
+- [ ] Stepless adjustment of video speed
 - [ ] ......
 
 See the [open issues](https://github.com/0xlau/biliplus/issues) for a full list of proposed features (and known issues).
