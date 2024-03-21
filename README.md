@@ -1,27 +1,32 @@
 <a name="readme-top"></a>
 
 
-<!-- PROJECT SHIELDS -->
+<!-- PROJECT SHIELDS
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+ -->
 
-
+![biliplus](https://socialify.git.ci/0xlau/biliplus/image?description=1&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2F0xlau%2Fbiliplus%2Fmain%2Fimg%2Flogo_128.png&name=1&owner=1&pulls=1&stargazers=1&theme=Light)
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
+  
+  <!--
+  
   <a href="https://github.com/0xlau/biliplus">
     <img src="img/logo_128.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">BiliPlus Extension</h3>
+  
+  -->
 
   <p align="center">
-    A Chrome extension to make better in bilibili.com
-    <br />
+    <!-- A Chrome extension to make better in bilibili.com -->
     <a href="https://chrome.google.com/webstore/detail/liddcdcjkpeaiblhebgihpmcaknpgbgk"><strong>Explore the chrome web store »</strong></a>
     <br />
     <br />
