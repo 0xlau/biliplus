@@ -6,5 +6,10 @@ chrome.storage.sync.get(["biliplus-enable", "clean-home-page"], (storage) => {
     let body = document.getElementsByTagName("body")[0];
     body.setAttribute("biliplus-clean-mode", "");
     document.getElementsByClassName("recommended-swipe")[0].remove();
+
+    document.querySelector('.load-more-anchor').classList.add('biliplus-load-more-anchor')
+    const scroll = new Event('scroll')
+    dispatchEvent(scroll)
+    document.querySelector('.load-more-anchor').classList.remove('biliplus-load-more-anchor')
   }
 });
