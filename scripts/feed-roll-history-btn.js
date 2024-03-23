@@ -6,6 +6,7 @@ chrome.storage.sync.get(
   (storage) => {
     if (storage["biliplus-enable"] && storage["feed-roll-history-btn"]) {
       const feedHistory = [];
+      const maxHistory = 10;
       let feedHistoryIndex = 0;
 
       const feedRollBackBtn = `
@@ -70,6 +71,9 @@ chrome.storage.sync.get(
               document.getElementsByClassName("feed-card")
             );
             feedHistory.push(feedCards);
+          }
+          if (feedHistory.length > maxHistory) {
+            feedHistory.shift();
           }
           feedHistoryIndex = feedHistory.length;
           disableElementById("feed-roll-back-btn", false);
