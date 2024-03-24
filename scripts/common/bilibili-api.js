@@ -1,6 +1,5 @@
 class _BILIAPI {
-
-  static BILIBILI_API = "https://api.bilibili.com";
+  static BILIBILI_API = 'https://api.bilibili.com';
 
   /**
    * 获取B站视频 aid、cid 等信息
@@ -125,7 +124,7 @@ class _BILIAPI {
   static async getVideoInfo(bvid) {
     const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/view?bvid=${bvid}`);
     const jsonData = await response.json();
-    if (response.status !== 200 || !jsonData){
+    if (response.status !== 200 || !jsonData) {
       throw new Error();
     }
     return jsonData.data;
@@ -133,9 +132,9 @@ class _BILIAPI {
 
   /**
    * 获取对应视频的在线观看人数数据
-   * @param {*} aid 
-   * @param {*} cid 
-   * @param {*} bvid 
+   * @param {*} aid
+   * @param {*} cid
+   * @param {*} bvid
    * @returns 观看人数data
    */
   /*
@@ -151,10 +150,10 @@ class _BILIAPI {
         }
     }
   */
-  static async getOnlineTotal(aid, cid, bvid){
+  static async getOnlineTotal(aid, cid, bvid) {
     const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/player/online/total?aid=${aid}&cid=${cid}&bvid=${bvid}`);
     const jsonData = await response.json();
-    if (response.status !== 200 || !jsonData){
+    if (response.status !== 200 || !jsonData) {
       throw new Error();
     }
     return jsonData.data;
@@ -163,7 +162,7 @@ class _BILIAPI {
   /**
    * 根据keyword获取用户信息
    * @param {string} keyword
-   * @returns 用户data 
+   * @returns 用户data
    */
   /* 返回用户data例子
     {
@@ -212,22 +211,23 @@ class _BILIAPI {
       "is_senior_member": 0
     }
   */
-  static async getUserInfoByKeyword(keyword){
+  static async getUserInfoByKeyword(keyword) {
     const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/wbi/search/type?search_type=bili_user&keyword=${keyword}`);
     const jsonData = await response.json();
-    if (response.status !== 200 || !jsonData){
+    if (response.status !== 200 || !jsonData) {
       throw new Error();
     }
-    if (jsonData.data.result == undefined){
+    if (jsonData.data.result == undefined) {
       return null;
     }
-    for (const userData of jsonData.data.result){
-      if (userData.uname == keyword || String(userData.mid) == keyword.replace(/^uid/, "")){
+    for (const userData of jsonData.data.result) {
+      if (userData.uname == keyword || String(userData.mid) == keyword.replace(/^uid/, '')) {
         return userData;
       }
     }
     return null;
   }
+
   /**
    * 获取导航栏用户信息
    * @returns 用户信息data
@@ -342,30 +342,25 @@ class _BILIAPI {
     }
 }
    */
-  static async getNavUserInfo(){
-    
-    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/nav`, {
-
-        // SESSDATA 字段
-        credentials: 'include',
-        Cookie: "SESSDATA=123123;asdasd=123"
-      
-    });
+  static async getNavUserInfo() {
+    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/nav`);
     const jsonData = await response.json();
-    if (response.status !== 200 || !jsonData){
+    if (response.status !== 200 || !jsonData) {
       throw new Error();
     }
     return jsonData.data;
   }
+
   /**
    * 获取ai简介
    * @param {object} params
    * @returns ai简介data
    */
-  static async getAiConclusion(params){
-    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/view/conclusion/get?${params}`);
+  static async getAIConclusion(params) {
+    const query = await _UTILS.getwts(params);
+    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/view/conclusion/get?${query}`);
     const jsonData = await response.json();
-    if (response.status !== 200 || !jsonData){
+    if (response.status !== 200 || !jsonData) {
       throw new Error();
     }
     return jsonData.data;
