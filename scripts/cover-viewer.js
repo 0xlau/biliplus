@@ -76,6 +76,10 @@ chrome.storage.sync.get(["biliplus-enable", "cover-viewer"], (storage) => {
             statElement.setAttribute("data-biliplus-aid", videoInfo.aid);
             statElement.setAttribute("data-biliplus-cid", videoInfo.cid);
             statElement.setAttribute("data-biliplus-bvid", videoInfo.bvid);
+            statElement.setAttribute(
+              "data-biliplus-up_mid",
+              videoInfo.owner.mid
+            );
             aid = videoInfo.aid;
             cid = videoInfo.cid;
             bvid = videoInfo.bvid;
