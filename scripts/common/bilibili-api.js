@@ -228,4 +228,146 @@ class _BILIAPI {
     }
     return null;
   }
+  /**
+   * 获取导航栏用户信息
+   * @returns 用户信息data
+   */
+  /**
+   * 数据示例
+   * {
+    "code": 0,
+    "message": "0",
+    "ttl": 1,
+    "data": {
+        "isLogin": true,
+        "email_verified": 1,
+        "face": "https://i0.hdslb.com/bfs/face/aebb2639a0d47f2ce1fec0631f412eaf53d4a0be.jpg",
+        "face_nft": 0,
+        "face_nft_type": 0,
+        "level_info": {
+            "current_level": 6,
+            "current_min": 28800,
+            "current_exp": 52689,
+            "next_exp": "--"
+        },
+        "mid": 293793435,
+        "mobile_verified": 1,
+        "money": 172.4,
+        "moral": 70,
+        "official": {
+            "role": 0,
+            "title": "",
+            "desc": "",
+            "type": -1
+        },
+        "officialVerify": {
+            "type": -1,
+            "desc": ""
+        },
+        "pendant": {
+            "pid": 2511,
+            "name": "初音未来13周年",
+            "image": "https://i0.hdslb.com/bfs/garb/item/4f8f3f1f2d47f0dad84f66aa57acd4409ea46361.png",
+            "expire": 0,
+            "image_enhance": "https://i0.hdslb.com/bfs/garb/item/fe0b83b53e2342b16646f6e7a9370d8a867decdb.webp",
+            "image_enhance_frame": "https://i0.hdslb.com/bfs/garb/item/127c507ec8448be30cf5f79500ecc6ef2fd32f2c.png"
+        },
+        "scores": 0,
+        "uname": "社会易姐QwQ",
+        "vipDueDate": 1707494400000,
+        "vipStatus": 1,
+        "vipType": 2,
+        "vip_pay_type": 0,
+        "vip_theme_type": 0,
+        "vip_label": {
+            "path": "",
+            "text": "年度大会员",
+            "label_theme": "annual_vip",
+            "text_color": "#FFFFFF",
+            "bg_style": 1,
+            "bg_color": "#FB7299",
+            "border_color": "",
+            "use_img_label": true,
+            "img_label_uri_hans": "",
+            "img_label_uri_hant": "",
+            "img_label_uri_hans_static": "https://i0.hdslb.com/bfs/vip/8d4f8bfc713826a5412a0a27eaaac4d6b9ede1d9.png",
+            "img_label_uri_hant_static": "https://i0.hdslb.com/bfs/activity-plat/static/20220614/e369244d0b14644f5e1a06431e22a4d5/VEW8fCC0hg.png"
+        },
+        "vip_avatar_subscript": 1,
+        "vip_nickname_color": "#FB7299",
+        "vip": {
+            "type": 2,
+            "status": 1,
+            "due_date": 1707494400000,
+            "vip_pay_type": 0,
+            "theme_type": 0,
+            "label": {
+                "path": "",
+                "text": "年度大会员",
+                "label_theme": "annual_vip",
+                "text_color": "#FFFFFF",
+                "bg_style": 1,
+                "bg_color": "#FB7299",
+                "border_color": "",
+                "use_img_label": true,
+                "img_label_uri_hans": "",
+                "img_label_uri_hant": "",
+                "img_label_uri_hans_static": "https://i0.hdslb.com/bfs/vip/8d4f8bfc713826a5412a0a27eaaac4d6b9ede1d9.png",
+                "img_label_uri_hant_static": "https://i0.hdslb.com/bfs/activity-plat/static/20220614/e369244d0b14644f5e1a06431e22a4d5/VEW8fCC0hg.png"
+            },
+            "avatar_subscript": 1,
+            "nickname_color": "#FB7299",
+            "role": 3,
+            "avatar_subscript_url": "",
+            "tv_vip_status": 0,
+            "tv_vip_pay_type": 0,
+            "tv_due_date": 1640793600
+        },
+        "wallet": {
+            "mid": 293793435,
+            "bcoin_balance": 5,
+            "coupon_balance": 5,
+            "coupon_due_time": 0
+        },
+        "has_shop": true,
+        "shop_url": "https://gf.bilibili.com?msource=main_station",
+        "allowance_count": 0,
+        "answer_status": 0,
+        "is_senior_member": 1,
+        "wbi_img": {
+            "img_url": "https://i0.hdslb.com/bfs/wbi/653657f524a547ac981ded72ea172057.png",
+            "sub_url": "https://i0.hdslb.com/bfs/wbi/6e4909c702f846728e64f6007736a338.png"
+        },
+        "is_jury": false
+    }
+}
+   */
+  static async getNavUserInfo(){
+    
+    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/nav`, {
+
+        // SESSDATA 字段
+        credentials: 'include',
+        Cookie: "SESSDATA=123123;asdasd=123"
+      
+    });
+    const jsonData = await response.json();
+    if (response.status !== 200 || !jsonData){
+      throw new Error();
+    }
+    return jsonData.data;
+  }
+  /**
+   * 获取ai简介
+   * @param {object} params
+   * @returns ai简介data
+   */
+  static async getAiConclusion(params){
+    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/view/conclusion/get?${params}`);
+    const jsonData = await response.json();
+    if (response.status !== 200 || !jsonData){
+      throw new Error();
+    }
+    return jsonData.data;
+  }
 }

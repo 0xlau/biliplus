@@ -3,3 +3,8 @@
     cursor: not-allowed;
     pointer-events: none;
 }
+.biliplus-load-more-anchor {
+  position: absolute;
+  opacity: 0;
+  top: 200px;
+}
