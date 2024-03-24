@@ -28,4 +28,11 @@ chrome.storage.sync.get(['biliplus-enable', 'hide-user-comment'], storage => {
       }
     }, 500);
   }
+  //默认开启esc键退出图片功能
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const exitButton = document.querySelector('.reply-view-image .operation-btn-icon.close-container');
+      if (exitButton) exitButton.click();
+    }
+  });
 });
