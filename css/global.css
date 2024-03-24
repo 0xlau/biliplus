@@ -8,3 +8,7 @@
   opacity: 0;
   top: 200px;
 }
+.biliplus-hide-hot-search-list .trending {
+  display: none;
+}
+/* .biliplus-hide-hot-search-list  */
