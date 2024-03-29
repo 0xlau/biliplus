@@ -17,6 +17,7 @@
         "scripts/common/md5.min.js",
         "scripts/common/utils.js",
         "scripts/common/bilibili-api.js",
+        "scripts/global-patches.js",
         "scripts/cover-viewer.js",
         "scripts/ai-conclusion.js",
         "scripts/hide-hot-search-list.js"
