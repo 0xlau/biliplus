@@ -1,5 +1,16 @@
-.biliplus-disabled{
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
+.biliplus-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.biliplus-load-more-anchor {
+  position: absolute;
+  opacity: 0;
+  top: 200px;
+}
+.biliplus-hide-hot-search-list .search-panel .trending {
+  display: none;
+}
+.biliplus-hide-hot-search-list.biliplus-hide-hot-search-list-search-panel-raduis .center-search__bar.is-focus #nav-searchform.is-focus{
+  border-radius: 8px !important;
 }
