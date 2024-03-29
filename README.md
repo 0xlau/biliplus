@@ -55,6 +55,7 @@
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#patches">Patches</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -70,6 +71,8 @@
 <div align="center">
   <img src="img/screenshot.png"/>
 </div>
+
+<br/>
 
 [Bilibili.com](https://bilibili.com) actually has a perfect user experience, but as a developer who pays attention to details, there may still be some areas that make us uncomfortable, so this extension was born.
 
@@ -214,3 +217,7 @@ Project Link: [https://github.com/0xlau/biliplus](https://github.com/0xlau/bilip
 [license-url]: https://github.com/0xlau/biliplus/blob/master/LICENSE.txt
 [chrome-shield]: https://img.shields.io/badge/-Plugin_Download-black.svg?style=for-the-badge&colorB=555
 [chrome-url]: https://chrome.com/
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=0xlau/biliplus&type=Date)](https://star-history.com/#0xlau/biliplus&Date)

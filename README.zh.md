@@ -50,6 +50,7 @@
       </ul>
     </li>
     <li><a href="#路线图">路线图</a></li>
+    <li><a href="#补丁">补丁</a></li>
     <li><a href="#贡献代码">贡献代码</a></li>
     <li><a href="#协议">协议</a></li>
     <li><a href="#联系">联系</a></li>
@@ -65,6 +66,8 @@
 <div align="center">
   <img src="img/screenshot.png"/>
 </div>
+
+<br/>
 
 [Bilibili.com](https://bilibili.com) 其实已经有一个完美的用户体验，但作为一个细节控的开发者，可能还有一些地方让我们感到不舒服，所以这个扩展诞生了。
 
