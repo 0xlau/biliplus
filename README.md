@@ -9,7 +9,7 @@
 [![MIT License][license-shield]][license-url]
  -->
 
-![biliplus](https://socialify.git.ci/0xlau/biliplus/image?description=1&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2F0xlau%2Fbiliplus%2Fmain%2Fimg%2Flogo_128.png&name=1&owner=1&pulls=1&stargazers=1&theme=Light)
+![biliplus](https://socialify.git.ci/0xlau/biliplus/image?description=1&descriptionEditable=A%20Chrome%2FEdge%20extension%20to%20feel%20better%20in%20bilibili.com&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2F0xlau%2Fbiliplus%2Fmain%2Fimg%2Flogo_128.png&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Light)
 
 <!-- PROJECT LOGO -->
 <br />
@@ -55,6 +55,7 @@
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#patches">Patches</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -70,6 +71,8 @@
 <div align="center">
   <img src="img/screenshot.png"/>
 </div>
+
+<br/>
 
 [Bilibili.com](https://bilibili.com) actually has a perfect user experience, but as a developer who pays attention to details, there may still be some areas that make us uncomfortable, so this extension was born.
 
@@ -131,11 +134,16 @@ _Below is an example of how you can manual installing from source code._
 
 - [x] Clean Home Mode
 - [x] Feed Roll Back Button
-- [ ] Summarize video in cover list by Bilibili AI
+- [x] Summarize video in cover list by Bilibili AI
 - [x] Display the number of viewers on the video cover
 - [x] Hide all comments from a user by userID
+- [x] Hide Bilibili hot searches in the search box
 - [ ] Stepless adjustment of video speed
 - [ ] ......
+
+## Patches
+
+- [x] Resolve the issue of images not being able to exit using the Esc key
 
 See the [open issues](https://github.com/0xlau/biliplus/issues) for a full list of proposed features (and known issues).
 
@@ -209,3 +217,7 @@ Project Link: [https://github.com/0xlau/biliplus](https://github.com/0xlau/bilip
 [license-url]: https://github.com/0xlau/biliplus/blob/master/LICENSE.txt
 [chrome-shield]: https://img.shields.io/badge/-Plugin_Download-black.svg?style=for-the-badge&colorB=555
 [chrome-url]: https://chrome.com/
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=0xlau/biliplus&type=Date)](https://star-history.com/#0xlau/biliplus&Date)
