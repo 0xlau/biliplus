@@ -134,8 +134,13 @@ _Below is an example of how you can manual installing from source code._
 - [x] Summarize video in cover list by Bilibili AI
 - [x] Display the number of viewers on the video cover
 - [x] Hide all comments from a user by userID
+- [x] Hide Bilibili hot searches in the search box
 - [ ] Stepless adjustment of video speed
 - [ ] ......
+
+## Patches
+
+- [x] Resolve the issue of images not being able to exit using the Esc key
 
 See the [open issues](https://github.com/0xlau/biliplus/issues) for a full list of proposed features (and known issues).
 
