@@ -8,13 +8,9 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/feed-roll-history-btn.js", "scripts/clean-home-page.js", "scripts/hide-hot-search-list.js"],
+      "js": ["scripts/feed-roll-history-btn.js", "scripts/clean-home-page.js"],
       "matches": ["https://www.bilibili.com/*"],
-      "css": [
-        "css/global.css",
-        "css/feed-roll-history-btn.css",
-        "css/clean-home-page.css"
-      ]
+      "css": ["css/global.css", "css/feed-roll-history-btn.css", "css/clean-home-page.css"]
     },
     {
       "js": [
@@ -22,17 +18,14 @@
         "scripts/common/utils.js",
         "scripts/common/bilibili-api.js",
         "scripts/cover-viewer.js",
-        "scripts/ai-conclusion.js"
+        "scripts/ai-conclusion.js",
+        "scripts/hide-hot-search-list.js"
       ],
       "matches": ["https://*.bilibili.com/*"],
       "css": ["css/global.css", "css/ai-conclusion.css"]
     },
     {
-      "js": [
-        "scripts/common/utils.js",
-        "scripts/common/bilibili-api.js",
-        "scripts/hide-user-comment.js"
-      ],
+      "js": ["scripts/common/utils.js", "scripts/common/bilibili-api.js", "scripts/hide-user-comment.js"],
       "matches": ["https://www.bilibili.com/video/*"],
       "css": ["css/global.css"]
     }
