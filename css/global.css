@@ -11,6 +11,9 @@
 .biliplus-hide-hot-search-list .search-panel .trending {
   display: none;
 }
-.biliplus-hide-hot-search-list.biliplus-hide-hot-search-list-search-panel-raduis .center-search__bar.is-focus #nav-searchform.is-focus{
+.biliplus-hide-hot-search-list.biliplus-hide-hot-search-list-search-panel-raduis .center-search__bar.is-focus #nav-searchform.is-focus {
   border-radius: 8px !important;
+}
+.biliplus-stepless-video-rate .bpx-player-ctrl-btn.bpx-player-ctrl-playbackrate {
+  display: none;
 }

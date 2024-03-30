@@ -138,7 +138,7 @@ _Below is an example of how you can manual installing from source code._
 - [x] Display the number of viewers on the video cover
 - [x] Hide all comments from a user by userID
 - [x] Hide Bilibili hot searches in the search box
-- [ ] Stepless adjustment of video speed
+- [x] Stepless adjustment of video speed
 - [ ] ......
 
 ## Patches
