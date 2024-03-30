@@ -26,9 +26,9 @@
       "css": ["css/global.css", "css/ai-conclusion.css"]
     },
     {
-      "js": ["scripts/common/utils.js", "scripts/common/bilibili-api.js", "scripts/hide-user-comment.js"],
+      "js": ["scripts/common/utils.js", "scripts/common/bilibili-api.js", "scripts/hide-user-comment.js", "scripts/stepless-video-rate.js"],
       "matches": ["https://www.bilibili.com/video/*"],
-      "css": ["css/global.css"]
+      "css": ["css/global.css", "css/stepless-video-rate-btn.css"]
     }
   ],
   "permissions": ["storage"],
