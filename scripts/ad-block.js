@@ -39,6 +39,7 @@ function createObserver(
   callback,
   options = {
     childList: true,
+    subtree: true,
     optimize: throttle, // debounce | throttle
     waite: 100
   }
