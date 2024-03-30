@@ -9,7 +9,7 @@
 [![MIT License][license-shield]][license-url]
  -->
 
-![biliplus](https://socialify.git.ci/0xlau/biliplus/image?description=1&descriptionEditable=A%20Chrome%2FEdge%20extension%20to%20feel%20better%20in%20bilibili.com&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2F0xlau%2Fbiliplus%2Fmain%2Fimg%2Flogo_128.png&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Light)
+![biliplus](https://socialify.git.ci/0xlau/biliplus/image?description=1&descriptionEditable=A%20Chrome%2FEdge%20extension%20to%20feel%20better%20in%20bilibili.com&font=Raleway&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2F0xlau%2Fbiliplus%2Fmain%2Flogo.png&name=1&owner=1&pulls=1&stargazers=1&theme=Auto)
 
 <!-- PROJECT LOGO -->
 <br />
