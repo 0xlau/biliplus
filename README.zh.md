@@ -19,6 +19,8 @@
 
   <h3 align="center">BiliPlus 浏览器扩展</h3>
 
+  <a href="https://trendshift.io/repositories/9629" target="_blank"><img src="https://trendshift.io/api/badge/repositories/9629" alt="0xlau%2Fbiliplus | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+
   <p align="center">
     一个可以在冲浪 bilibili.com 的时候体验更好的浏览器扩展
     <br />
