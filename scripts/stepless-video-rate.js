@@ -102,6 +102,21 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
 
         dot.addEventListener('mousedown', mouseDown);
         box.addEventListener('mouseup', mouseUp);
+
+        const steplessBtn = document.querySelector('.stepless-video-rate-btn-result')
+        console.log("🚀 ~ observer ~ steplessBtn:", steplessBtn)
+
+        //double click to reset rate
+        steplessBtn.addEventListener('dblclick', () => {
+          document.querySelector('video').playbackRate = 1.0;
+          videoRate = 1.0;
+          // console.log("🚀 ~ steplessBtn.addEventListener ~ videoRate = 1.0;:", videoRate = 1.0)
+          document.querySelector('.stepless-video-rate-number').innerText = "1.0";
+          document.querySelector('.stepless-video-rate-box .bui-thumb').style.transform = 'translateY(-10px)';
+          document.querySelector('.stepless-video-rate-box .bui-bar').style.transform = 'scaleY(0.2)';
+          mousePositionY = 0;
+          initialPositionY = -10;
+        });
       }
     });
 
