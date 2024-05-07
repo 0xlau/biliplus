@@ -26,7 +26,7 @@
       "css": ["css/global.css", "css/ai-conclusion.css"]
     },
     {
-      "js": ["scripts/common/utils.js", "scripts/common/bilibili-api.js", "scripts/hide-user-comment.js", "scripts/stepless-video-rate.js"],
+      "js": ["scripts/common/utils.js", "scripts/common/bilibili-api.js", "scripts/hide-user-comment.js", "scripts/stepless-video-rate.js", "scripts/auto-load-comment.js"],
       "matches": ["https://www.bilibili.com/video/*", "https://www.bilibili.com/list/*", "https://www.bilibili.com/bangumi/play/*"],
       "css": ["css/global.css", "css/stepless-video-rate-btn.css"]
     }
