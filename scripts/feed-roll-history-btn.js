@@ -18,60 +18,69 @@ chrome.storage.sync.get(['biliplus-enable', 'feed-roll-history-btn'], storage =>
     </button>
 `;
 
-    let feedRollBtn = document.getElementsByClassName('roll-btn')[0];
+    const targetNode = document.querySelector('.recommended-container_floor-aside');
+    const disconnect = observe(targetNode, () => {
+      let feedRollBtn = document.getElementsByClassName('roll-btn')[0];
 
-    if (feedRollBtn) {
-      // 处理返回上一页feed的历史内容
-      let backBtn = document.createElement('button');
-      feedRollBtn.parentNode.appendChild(backBtn);
-      backBtn.outerHTML = feedRollBackBtn;
+      if (feedRollBtn) {
+        // 处理返回上一页feed的历史内容
+        let backBtn = document.createElement('button');
+        feedRollBtn.parentNode.appendChild(backBtn);
+        backBtn.outerHTML = feedRollBackBtn;
 
-      document.getElementById('feed-roll-back-btn').addEventListener('click', () => {
-        let feedCards = document.getElementsByClassName('feed-card');
-        if (feedHistoryIndex == feedHistory.length) {
-          feedHistory.push(listInnerHTMLOfFeedCard(feedCards));
-        }
-        for (let fc_i = 0; fc_i < feedCards.length; fc_i++) {
-          feedCards[fc_i].innerHTML = feedHistory[feedHistoryIndex - 1][fc_i];
-        }
-        feedHistoryIndex = feedHistoryIndex - 1;
-        if (feedHistoryIndex == 0) {
-          disableElementById('feed-roll-back-btn', true);
-        }
-        disableElementById('feed-roll-next-btn', false);
-      });
+        document.getElementById('feed-roll-back-btn').addEventListener('click', () => {
+          let feedCards = document.getElementsByClassName('feed-card');
+          if (feedHistoryIndex == feedHistory.length) {
+            feedHistory.push(listInnerHTMLOfFeedCard(feedCards));
+          }
+          for (let fc_i = 0; fc_i < feedCards.length; fc_i++) {
+            feedCards[fc_i].innerHTML = feedHistory[feedHistoryIndex - 1][fc_i];
+          }
+          feedHistoryIndex = feedHistoryIndex - 1;
+          if (feedHistoryIndex == 0) {
+            disableElementById('feed-roll-back-btn', true);
+          }
+          disableElementById('feed-roll-next-btn', false);
+        });
 
-      // 处理返回下一页feed的历史内容
-      let nextBtn = document.createElement('div');
-      feedRollBtn.parentNode.appendChild(nextBtn);
-      nextBtn.outerHTML = feedRollNextBtn;
+        // 处理返回下一页feed的历史内容
+        let nextBtn = document.createElement('div');
+        feedRollBtn.parentNode.appendChild(nextBtn);
+        nextBtn.outerHTML = feedRollNextBtn;
 
-      document.getElementById('feed-roll-next-btn').addEventListener('click', () => {
-        let feedCards = document.getElementsByClassName('feed-card');
+        document.getElementById('feed-roll-next-btn').addEventListener('click', () => {
+          let feedCards = document.getElementsByClassName('feed-card');
 
-        for (let fc_i = 0; fc_i < feedCards.length; fc_i++) {
-          feedCards[fc_i].innerHTML = feedHistory[feedHistoryIndex + 1][fc_i];
-        }
+          for (let fc_i = 0; fc_i < feedCards.length; fc_i++) {
+            feedCards[fc_i].innerHTML = feedHistory[feedHistoryIndex + 1][fc_i];
+          }
 
-        feedHistoryIndex = feedHistoryIndex + 1;
-        if (feedHistoryIndex == feedHistory.length - 1) {
-          disableElementById('feed-roll-next-btn', true);
-        }
-        disableElementById('feed-roll-back-btn', false);
-      });
+          feedHistoryIndex = feedHistoryIndex + 1;
+          if (feedHistoryIndex == feedHistory.length - 1) {
+            disableElementById('feed-roll-next-btn', true);
+          }
+          disableElementById('feed-roll-back-btn', false);
+        });
 
-      // 处理点击换一换事件
-      feedRollBtn.id = 'feed-roll-btn';
-      feedRollBtn.addEventListener('click', () => {
-        if (feedHistoryIndex == feedHistory.length) {
-          let feedCards = listInnerHTMLOfFeedCard(document.getElementsByClassName('feed-card'));
-          feedHistory.push(feedCards);
-        }
-        feedHistoryIndex = feedHistory.length;
-        disableElementById('feed-roll-back-btn', false);
-        disableElementById('feed-roll-next-btn', true);
-      });
-    }
+        // 处理点击换一换事件
+        feedRollBtn.id = 'feed-roll-btn';
+        feedRollBtn.addEventListener('click', () => {
+          // 等待元素加载
+          setTimeout(() => {
+            if (feedHistoryIndex == feedHistory.length) {
+              let feedCards = listInnerHTMLOfFeedCard(document.getElementsByClassName('feed-card'));
+              feedHistory.push(feedCards);
+            }
+            feedHistoryIndex = feedHistory.length;
+            disableElementById('feed-roll-back-btn', false);
+            disableElementById('feed-roll-next-btn', true);
+          });
+        });
+
+        // disconnect observer
+        return true;
+      }
+    });
   }
 });
 
@@ -89,4 +98,23 @@ function listInnerHTMLOfFeedCard(feedCardElements) {
     feedCardInnerHTMLs.push(fc.innerHTML);
   }
   return feedCardInnerHTMLs;
+}
+
+function observe(node, callback, options) {
+  const observer = new MutationObserver((mutations, ob) => {
+    const result = callback(mutations, ob);
+    if (result) disconnect();
+  });
+  observer.observe(
+    node,
+    Object.assign(
+      {
+        childList: true,
+        subtree: true
+      },
+      options
+    )
+  );
+  const disconnect = () => observer.disconnect();
+  return disconnect;
 }
