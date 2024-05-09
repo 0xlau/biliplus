@@ -8,7 +8,7 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/feed-roll-history-btn.js", "scripts/clean-home-page.js"],
+      "js": ["scripts/common/utils.js", "scripts/feed-roll-history-btn.js", "scripts/clean-home-page.js"],
       "matches": ["https://www.bilibili.com/*"],
       "css": ["css/global.css", "css/feed-roll-history-btn.css", "css/clean-home-page.css"]
     },
