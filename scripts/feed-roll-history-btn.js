@@ -19,7 +19,7 @@ chrome.storage.sync.get(['biliplus-enable', 'feed-roll-history-btn'], storage =>
 `;
 
     const targetNode = document.querySelector('.recommended-container_floor-aside');
-    const disconnect = observe(targetNode, () => {
+    const disconnect = _UTILS.observe(targetNode, () => {
       let feedRollBtn = document.getElementsByClassName('roll-btn')[0];
 
       if (feedRollBtn) {
@@ -78,7 +78,7 @@ chrome.storage.sync.get(['biliplus-enable', 'feed-roll-history-btn'], storage =>
         });
 
         // disconnect observer
-        return true;
+        disconnect();
       }
     });
   }
@@ -98,23 +98,4 @@ function listInnerHTMLOfFeedCard(feedCardElements) {
     feedCardInnerHTMLs.push(fc.innerHTML);
   }
   return feedCardInnerHTMLs;
-}
-
-function observe(node, callback, options) {
-  const observer = new MutationObserver((mutations, ob) => {
-    const result = callback(mutations, ob);
-    if (result) disconnect();
-  });
-  observer.observe(
-    node,
-    Object.assign(
-      {
-        childList: true,
-        subtree: true
-      },
-      options
-    )
-  );
-  const disconnect = () => observer.disconnect();
-  return disconnect;
 }
