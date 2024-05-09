@@ -102,6 +102,8 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
 
         dot.addEventListener('mousedown', mouseDown);
         box.addEventListener('mouseup', mouseUp);
+      }else{
+        disconnect();
       }
     });
   }
