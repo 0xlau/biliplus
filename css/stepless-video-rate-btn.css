@@ -18,6 +18,7 @@
   cursor: pointer;
   font-weight: 600;
   width: 100%;
+  user-select: none;
 }
 
 .stepless-video-rate-box {
