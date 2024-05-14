@@ -25,9 +25,15 @@
   
   -->
 
+  <a href="https://trendshift.io/repositories/9629" target="_blank"><img src="https://trendshift.io/api/badge/repositories/9629" alt="0xlau%2Fbiliplus | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+
   <p align="center">
     <!-- A Chrome extension to make better in bilibili.com -->
     <a href="https://chrome.google.com/webstore/detail/liddcdcjkpeaiblhebgihpmcaknpgbgk"><strong>Explore the chrome web store »</strong></a>
+    <br />
+    <a href="https://microsoftedge.microsoft.com/addons/detail/ngkocakjkiflceafceddcmiolmdmmpcf"><strong>Explore the edge web store »</strong></a>
+    <br />
+    <a href="https://addons.mozilla.org/zh-CN/firefox/addon/biliplus-bilibili-%E5%8A%A0%E5%A4%A7%E6%9D%AF-%E7%BB%86%E8%8A%82%E4%BB%8E%E5%A4%A7%E6%9D%AF%E5%81%9A%E8%B5%B7"><strong>Explore the firefox web store »</strong></a>
     <br />
     <br />
     <a href="https://chrome.google.com/webstore/detail/liddcdcjkpeaiblhebgihpmcaknpgbgk">Chrome Extension</a>

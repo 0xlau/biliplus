@@ -81,4 +81,23 @@ class _UTILS {
     const query = this.encWbi(params, img_key, sub_key);
     return query;
   }
+
+  static observe(node, callback, options) {
+    const observer = new MutationObserver((mutations, ob) => {
+      callback(mutations, ob);
+    });
+    observer.observe(
+      node,
+      Object.assign(
+        {
+          childList: true,
+          subtree: true
+        },
+        options
+      )
+    );
+    const disconnect = () => observer.disconnect();
+    return disconnect;
+  }
+  
 }

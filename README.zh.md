@@ -19,10 +19,17 @@
 
   <h3 align="center">BiliPlus 浏览器扩展</h3>
 
+  <a href="https://trendshift.io/repositories/9629" target="_blank"><img src="https://trendshift.io/api/badge/repositories/9629" alt="0xlau%2Fbiliplus | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+
   <p align="center">
     一个可以在冲浪 bilibili.com 的时候体验更好的浏览器扩展
     <br />
+    <br />
     <a href="https://chrome.google.com/webstore/detail/liddcdcjkpeaiblhebgihpmcaknpgbgk"><strong>前往谷歌扩展应用中心 »</strong></a>
+    <br />
+    <a href="https://microsoftedge.microsoft.com/addons/detail/ngkocakjkiflceafceddcmiolmdmmpcf"><strong>前往Edge扩展应用中心 »</strong></a>
+    <br />
+    <a href="https://addons.mozilla.org/zh-CN/firefox/addon/biliplus-bilibili-%E5%8A%A0%E5%A4%A7%E6%9D%AF-%E7%BB%86%E8%8A%82%E4%BB%8E%E5%A4%A7%E6%9D%AF%E5%81%9A%E8%B5%B7"><strong>前往火狐扩展应用中心 »</strong></a>
     <br />
     <br />
     <a href="https://chrome.google.com/webstore/detail/liddcdcjkpeaiblhebgihpmcaknpgbgk">Chrome 扩展</a>

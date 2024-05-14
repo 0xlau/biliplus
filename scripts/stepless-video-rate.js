@@ -36,7 +36,7 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
     document.body.classList.add('biliplus-stepless-video-rate');
 
     // 用 MutationObserver 解决页面初始化时无法找到 bpx-player-ctrl-playbackrate 按钮
-    var observer = new MutationObserver(mutations => {
+    const disconnect = _UTILS.observe(document.body, () => {
       if (document.querySelector('.bpx-player-ctrl-btn.bpx-player-ctrl-playbackrate') == null) {
         return;
       }
@@ -117,10 +117,10 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
           mousePositionY = 0;
           initialPositionY = -10;
         });
+      }else{
+        disconnect();
       }
     });
-
-    observer.observe(document.body, { childList: true, subtree: true });
   }
 });
 
