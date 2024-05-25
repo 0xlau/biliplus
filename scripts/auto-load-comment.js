@@ -2,8 +2,8 @@ const replyMap = new Map()
 let oid = null
 let datav = []
 let avatarStyle = ''
-chrome.storage.sync.get(['biliplus-enable'], storage => {
-  if (!storage['biliplus-enable']) return
+chrome.storage.sync.get(['biliplus-enable', 'auto-load-comment'], storage => {
+  if (!storage['biliplus-enable'] || !storage['auto-load-comment']) return
   const observer = new MutationObserver(async () => {
     if (document.querySelector('.reply-item')) {
       if (!oid) {
@@ -11,7 +11,11 @@ chrome.storage.sync.get(['biliplus-enable'], storage => {
         oid = res.aid
       }
       const replyList = document.querySelectorAll('.reply-item')
-      // console.log(replyList)
+
+      const viewMore = document.querySelectorAll('.sub-reply-list .view-more')
+      viewMore.forEach(viewMoreDom => {
+        viewMoreDom.style.display = 'none'
+      })
 
       replyList.forEach(async replyDom => {
         const rid = replyDom.querySelector('.root-reply-avatar').getAttribute('data-root-reply-id')
