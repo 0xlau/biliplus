@@ -4,6 +4,16 @@
 
 let videoRate = 1.0;
 
+// 获取本地倍速值
+chrome.storage.sync.get('stepless-video-rate-value', val => {
+  if (!val['stepless-video-rate-value']) {
+    chrome.storage.sync.set({ 'stepless-video-rate-value': videoRate })
+  } else {
+    videoRate = val['stepless-video-rate-value']
+  }
+  document.querySelector('video').playbackRate = videoRate
+})
+
 chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
   if (storage['biliplus-enable'] && storage['stepless-video-rate']) {
     let hideBoxTimeout = null;
@@ -13,7 +23,7 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
       <div class="stepless-video-rate-btn" role="button" aria-label="无级倍速" tabindex="0">
         <div class="stepless-video-rate-btn-result">无级倍速</div>
         <div class="stepless-video-rate-box">
-          <div class="stepless-video-rate-number">1.0</div>
+          <div class="stepless-video-rate-number">${videoRate}</div>
           <div class="stepless-video-rate-progress bui bui-slider">
             <div class="bui-area">
               <div
@@ -52,6 +62,11 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
         const dot = document.querySelector('.stepless-video-rate-box .bui-thumb');
         const bar = document.querySelector('.stepless-video-rate-box .bui-bar');
         const rate = document.querySelector('.stepless-video-rate-box .stepless-video-rate-number');
+
+        // DOM创建完成后，根据本地倍速值初始化UI状态
+        initialPositionY =  - videoRate / 5 * 48
+        dot.style.transform = `translateY(${initialPositionY}px)`;
+        bar.style.transform = `scaleY(${Math.abs(initialPositionY) / 48})`;
 
         // 进入 btn 就显示 box
         document.querySelector('#bilibili-player').addEventListener('mouseover', e => {
@@ -98,6 +113,8 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
 
         function mouseUp() {
           box.removeEventListener('mousemove', mouseMove);
+          // 保存倍速值
+          chrome.storage.sync.set({ 'stepless-video-rate-value': videoRate })
         }
 
         dot.addEventListener('mousedown', mouseDown);
@@ -111,11 +128,13 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
           document.querySelector('video').playbackRate = 1.0;
           videoRate = 1.0;
           // console.log("🚀 ~ steplessBtn.addEventListener ~ videoRate = 1.0;:", videoRate = 1.0)
-          document.querySelector('.stepless-video-rate-number').innerText = "1.0";
-          document.querySelector('.stepless-video-rate-box .bui-thumb').style.transform = 'translateY(-10px)';
-          document.querySelector('.stepless-video-rate-box .bui-bar').style.transform = 'scaleY(0.2)';
+          rate.innerText = "1.0";
+          dot.style.transform = 'translateY(-10px)';
+          bar.style.transform = 'scaleY(0.2)';
           mousePositionY = 0;
           initialPositionY = -10;
+          // 保存倍速值
+          chrome.storage.sync.set({ 'stepless-video-rate-value': videoRate.toFixed(1) })
         });
       }else{
         disconnect();
