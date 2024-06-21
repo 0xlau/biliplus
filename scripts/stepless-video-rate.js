@@ -11,16 +11,6 @@ chrome.storage.sync.get('stepless-video-rate-value', val => {
   } else {
     videoRate = val['stepless-video-rate-value']
   }
-  document.querySelector('video').playbackRate = videoRate
-})
-
-const observer = new MutationObserver(() => {
-  document.querySelector('video').playbackRate = videoRate
-})
-observer.observe(document.querySelector('video'), {
-  attributes: true,
-  childList: true,
-  subtree: true
 })
 
 chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
@@ -51,6 +41,18 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
         </div>      
       </div>
     `;
+
+    // 初始化设置视频倍速
+    document.querySelector('video').playbackRate = videoRate
+
+    const observer = new MutationObserver(() => {
+      document.querySelector('video').playbackRate = videoRate
+    })
+    observer.observe(document.querySelector('video'), {
+      attributes: true,
+      childList: true,
+      subtree: true
+    })
 
     document.body.classList.add('biliplus-stepless-video-rate');
 
