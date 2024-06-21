@@ -14,6 +14,15 @@ chrome.storage.sync.get('stepless-video-rate-value', val => {
   document.querySelector('video').playbackRate = videoRate
 })
 
+const observer = new MutationObserver(() => {
+  document.querySelector('video').playbackRate = videoRate
+})
+observer.observe(document.querySelector('video'), {
+  attributes: true,
+  childList: true,
+  subtree: true
+})
+
 chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
   if (storage['biliplus-enable'] && storage['stepless-video-rate']) {
     let hideBoxTimeout = null;
