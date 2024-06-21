@@ -45,14 +45,9 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
     // 初始化设置视频倍速
     document.querySelector('video').playbackRate = videoRate
 
-    const observer = new MutationObserver(() => {
+    _UTILS.observe(document.querySelector('video'), () => {
       document.querySelector('video').playbackRate = videoRate
-    })
-    observer.observe(document.querySelector('video'), {
-      attributes: true,
-      childList: true,
-      subtree: true
-    })
+    }, { attributes: true })
 
     document.body.classList.add('biliplus-stepless-video-rate');
 
