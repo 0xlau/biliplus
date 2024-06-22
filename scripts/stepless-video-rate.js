@@ -45,6 +45,7 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
     // 初始化设置视频倍速
     document.querySelector('video').playbackRate = videoRate
 
+    // 观察video元素属性变化，进而重新初始化倍速
     _UTILS.observe(document.querySelector('video'), () => {
       document.querySelector('video').playbackRate = videoRate
     }, { attributes: true })
@@ -127,13 +128,11 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
         box.addEventListener('mouseup', mouseUp);
 
         const steplessBtn = document.querySelector('.stepless-video-rate-btn-result')
-        console.log("🚀 ~ observer ~ steplessBtn:", steplessBtn)
 
         //double click to reset rate
         steplessBtn.addEventListener('dblclick', () => {
           document.querySelector('video').playbackRate = 1.0;
           videoRate = 1.0;
-          // console.log("🚀 ~ steplessBtn.addEventListener ~ videoRate = 1.0;:", videoRate = 1.0)
           rate.innerText = "1.0";
           dot.style.transform = 'translateY(-10px)';
           bar.style.transform = 'scaleY(0.2)';
