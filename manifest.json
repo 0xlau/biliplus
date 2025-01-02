@@ -20,7 +20,8 @@
         "scripts/global-patches.js",
         "scripts/cover-viewer.js",
         "scripts/ai-conclusion.js",
-        "scripts/hide-hot-search-list.js"
+        "scripts/hide-hot-search-list.js",
+        "scripts/auto-subtitle.js"
       ],
       "matches": ["https://*.bilibili.com/*"],
       "css": ["css/global.css", "css/ai-conclusion.css"]
@@ -31,7 +32,11 @@
       "css": ["css/global.css", "css/stepless-video-rate-btn.css"]
     }
   ],
-  "permissions": ["storage"],
+  "background": {
+    "service_worker": "scripts/background/api-listener.js"
+  },
+  "permissions": ["storage", "webRequest", "tabs"],
+  "host_permissions": ["*://*.bilibili.com/x/player/wbi/v2"],
   "action": {
     "default_popup": "settings/settings.html",
     "default_icon": "logo.png"
