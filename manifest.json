@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "BiliPlus - Bilibili 加大杯，细节从大杯做起",
   "description": "专门为细节控的人群使用，只要在B站上设计不合理的地方，都可以加入到大杯中。",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "icons": {
     "128": "logo.png"
   },
