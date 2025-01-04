@@ -365,4 +365,20 @@ class _BILIAPI {
     }
     return jsonData.data;
   }
+
+  /**
+   * 获取评论
+   * @param {object} params
+   * @returns 评论data
+   */
+
+  static async getComment(params) {
+    const query = await _UTILS.getwts(params);
+    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/v2/reply/reply?${query}`);
+    const jsonData = await response.json();
+    if (response.status !== 200 || !jsonData) {
+      throw new Error();
+    }
+    return jsonData.data;
+  }
 }
