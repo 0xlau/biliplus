@@ -1,4 +1,4 @@
-.stepless-video-rate-btn {
+﻿.stepless-video-rate-btn {
   fill: #fff;
   color: hsla(0, 0%, 100%, 0.8);
   height: 22px;
@@ -22,33 +22,67 @@
 }
 
 .stepless-video-rate-box {
-  background: hsla(0, 0%, 8%, 0.9);
-  border-radius: 2px;
+  background: rgba(21, 21, 21, 0.9); /* 稍微深一点的背景 */
+  border-radius: 4px; /* 更圆润的边角 */
   bottom: 41px;
   display: none;
-  height: 100px;
+  height: 146px; /* 稍微增加高度给输入框留空间 */
   left: 50%;
-  margin-left: -16px;
+  margin-left: -22px; /* 居中修正 */
   position: absolute;
-  width: 32px;
+  width: 44px; /* 加宽到 44px */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* 添加阴影增加立体感 */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* 增加微弱边框 */
+  padding-top: 8px; /* 顶部留白 */
+  box-sizing: border-box;
 }
 
 .stepless-video-rate-box.display {
   display: block;
+  animation: fadeIn 0.2s ease-out; /* 添加简单的淡入动画 */
 }
 
-.stepless-video-rate-number {
-  color: #e5e9ef;
-  font-size: 12px;
-  height: 28px;
-  line-height: 28px;
-  margin-bottom: 2px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 移除原有的 .stepless-video-rate-number 样式，改用 input 专用样式 */
+.stepless-video-rate-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #fff;
+  width: 34px;
+  height: 24px;
+  line-height: 24px;
+  margin: 0 auto 8px;
   text-align: center;
-  width: 100%;
+  display: block;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s;
+  
+  /* 移除 Firefox 的数字选择器 */
+  -moz-appearance: textfield;
+}
+
+/* 移除 Webkit 浏览器 (Chrome/Edge) 的数字选择器箭头 */
+.stepless-video-rate-input::-webkit-outer-spin-button,
+.stepless-video-rate-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* 聚焦时的 B站蓝 */
+.stepless-video-rate-input:focus {
+  border-color: #00AEEC;
+  background: rgba(0, 174, 236, 0.1);
 }
 
 .stepless-video-rate-progress {
-  height: 60px !important;
+  height: 100px !important;
   margin: 0 auto;
 }
 
