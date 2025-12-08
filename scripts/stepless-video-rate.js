@@ -8,7 +8,8 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
   if (storage['biliplus-enable'] && storage['stepless-video-rate']) {
     let hideBoxTimeout = null;
     var mousePositionY = 0;
-    var initialPositionY = -10;
+    // 1.0倍速对应的位置：-88 * (1.0 / 5.0) = -17.6
+    var initialPositionY = -17.6;
     
     // 优化：将原来的 div 替换为 input，并添加内联样式以适配 UI
     const rateButton = `
@@ -25,7 +26,7 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
                 <div class="bui-bar-wrap">
                   <div class="bui-bar bui-bar-normal" role="progressbar" style="transform: scaleY(0.2);"></div>
                 </div>
-                <div class="bui-thumb" style="left: -5px; transform: translateY(-10px);">
+                <div class="bui-thumb" style="left: -5px; transform: translateY(-17.6px);">
                   <div class="bui-thumb-dot" style=""></div>
                 </div>
               </div>
@@ -57,19 +58,27 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
         const rateInput = document.querySelector('.stepless-video-rate-box .stepless-video-rate-input');
         rateInput.value = videoRate;
 
-        // 进入 btn 就显示 box
-        document.querySelector('#bilibili-player').addEventListener('mouseover', e => {
-          const target = e.target;
-          if (target.nodeName === 'DIV' && target.parentElement.classList.contains('stepless-video-rate-btn')) {
-            showBox();
-            if (hideBoxTimeout != null) {
-              clearTimeout(hideBoxTimeout);
-            }
+        const steplessVideoRateBtn = document.querySelector('.stepless-video-rate-btn');
+
+        // 进入 btn 区域就显示 box（使用 mouseenter，不会冒泡）
+        steplessVideoRateBtn.addEventListener('mouseenter', () => {
+          showBox();
+          if (hideBoxTimeout != null) {
+            clearTimeout(hideBoxTimeout);
+            hideBoxTimeout = null;
+          }
+        });
+
+        // 在 box 内移动时，确保清除隐藏定时器
+        box.addEventListener('mouseenter', () => {
+          if (hideBoxTimeout != null) {
+            clearTimeout(hideBoxTimeout);
+            hideBoxTimeout = null;
           }
         });
 
         // 离开 btn 就消失 box
-        document.querySelector('.stepless-video-rate-btn').addEventListener('mouseleave', e => {
+        steplessVideoRateBtn.addEventListener('mouseleave', () => {
           // 如果输入框聚焦，则不隐藏
           if (document.activeElement === rateInput) return;
 
@@ -159,13 +168,14 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate'], storage => {
         steplessBtn.addEventListener('dblclick', () => {
           document.querySelector('video').playbackRate = 1.0;
           videoRate = 1.0;
-          
+
           rateInput.value = "1.0";
-          
-          document.querySelector('.stepless-video-rate-box .bui-thumb').style.transform = 'translateY(-10px)';
+
+          // 1.0倍速对应的位置：-88 * (1.0 / 5.0) = -17.6
+          document.querySelector('.stepless-video-rate-box .bui-thumb').style.transform = 'translateY(-17.6px)';
           document.querySelector('.stepless-video-rate-box .bui-bar').style.transform = 'scaleY(0.2)';
           mousePositionY = 0;
-          initialPositionY = -10;
+          initialPositionY = -17.6;
         });
       }else{
         disconnect();
