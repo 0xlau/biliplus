@@ -26,7 +26,7 @@
   border-radius: 4px; /* 更圆润的边角 */
   bottom: 41px;
   display: none;
-  height: 146px; /* 稍微增加高度给输入框留空间 */
+  height: 220px; /* 2026-02-08：加长无级倍速滑条，提高拖动调速精度 */
   left: 50%;
   margin-left: -22px; /* 居中修正 */
   position: absolute;
@@ -82,7 +82,7 @@
 }
 
 .stepless-video-rate-progress {
-  height: 100px !important;
+  height: 170px !important; /* 2026-02-08：加长滑条本体 */
   margin: 0 auto;
 }
 

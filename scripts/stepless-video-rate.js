@@ -7,6 +7,27 @@ let currentVideoElement = null;
 let persistRate = false; // 是否在切换视频时保持倍速
 let lastVideoSrc = null; // 记录上次的视频源，用于检测视频切换
 
+const STEPLESS_VIDEO_RATE_MIN = 0.1;
+const STEPLESS_VIDEO_RATE_MAX = 5.0;
+// 2026-02-08：拉长“无级倍速”滑条后，同步调整拖动的像素范围，避免手感变差。
+// 说明：原进度条高度 100px 时，实际可拖动范围为 88px；现在进度条高度改为 170px（见 css/stepless-video-rate-btn.css），对应可拖动范围约为 158px。
+const STEPLESS_VIDEO_RATE_SLIDER_RANGE_PX = 158;
+
+/**
+ * 2026-02-08：倍速 ↔ 滑条位置换算，避免散落的魔法数字（88 / 17.6）。
+ */
+function calcPositionYByRate(rate) {
+  return -STEPLESS_VIDEO_RATE_SLIDER_RANGE_PX * (rate / STEPLESS_VIDEO_RATE_MAX);
+}
+
+function calcBarScaleByPositionY(positionY) {
+  return Math.abs(positionY) / STEPLESS_VIDEO_RATE_SLIDER_RANGE_PX;
+}
+
+function calcRateByPositionY(positionY) {
+  return ((Math.abs(positionY) / STEPLESS_VIDEO_RATE_SLIDER_RANGE_PX) * STEPLESS_VIDEO_RATE_MAX).toFixed(1);
+}
+
 // 监听 storage 变化，实时更新 persistRate 设置
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'sync' && changes['stepless-video-rate-persist']) {
@@ -34,8 +55,8 @@ function resetRateAndUI() {
   const bar = document.querySelector('.stepless-video-rate-box .bui-bar');
 
   if (rateInput) rateInput.value = '1.0';
-  if (dot) dot.style.transform = 'translateY(-17.6px)';
-  if (bar) bar.style.transform = 'scaleY(0.2)';
+  if (dot) dot.style.transform = `translateY(${calcPositionYByRate(1.0)}px)`;
+  if (bar) bar.style.transform = `scaleY(${1.0 / STEPLESS_VIDEO_RATE_MAX})`;
 }
 
 /**
@@ -104,17 +125,17 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate', 'stepless-vid
   if (storage['biliplus-enable'] && storage['stepless-video-rate']) {
     let hideBoxTimeout = null;
     var mousePositionY = 0;
-    // 根据 videoRate 计算初始位置：-88 * (rate / 5.0)
-    var initialPositionY = -88 * (videoRate / 5.0);
+    // 2026-02-08：根据 videoRate 计算初始位置（滑条加长后，使用统一换算函数）
+    var initialPositionY = calcPositionYByRate(videoRate);
     
     // 优化：将原来的 div 替换为 input，并添加内联样式以适配 UI
     // 使用动态值以支持跨标签页保持倍速
-    const barScale = videoRate / 5.0;
+    const barScale = videoRate / STEPLESS_VIDEO_RATE_MAX;
     const rateButton = `
       <div class="stepless-video-rate-btn" role="button" aria-label="无级倍速" tabindex="0">
         <div class="stepless-video-rate-btn-result">无级倍速</div>
         <div class="stepless-video-rate-box">
-          <input type="number" class="stepless-video-rate-input" step="0.1" min="0.1" max="5.0" value="${videoRate}">
+          <input type="number" class="stepless-video-rate-input" step="0.1" min="${STEPLESS_VIDEO_RATE_MIN}" max="${STEPLESS_VIDEO_RATE_MAX}" value="${videoRate}">
           <div class="stepless-video-rate-progress bui bui-slider">
             <div class="bui-area">
               <div
@@ -201,15 +222,15 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate', 'stepless-vid
         function mouseMove(event) {
           let deltaY = event.clientY - mousePositionY;
 
-          // 这里的范围检测也需要更新为 88
-          if (tempPositionY + deltaY < -88 || tempPositionY + deltaY > 0) {
+          // 2026-02-08：滑条加长后，同步调整拖动边界。
+          if (tempPositionY + deltaY < -STEPLESS_VIDEO_RATE_SLIDER_RANGE_PX || tempPositionY + deltaY > 0) {
             return;
           }
 
           initialPositionY = tempPositionY + deltaY;
           dot.style.transform = `translateY(${initialPositionY}px)`;
-          bar.style.transform = `scaleY(${Math.abs(initialPositionY) / 88})`;
-          videoRate = ((Math.abs(initialPositionY) / 88) * 5).toFixed(1);
+          bar.style.transform = `scaleY(${calcBarScaleByPositionY(initialPositionY)})`;
+          videoRate = calcRateByPositionY(initialPositionY);
           
           rateInput.value = videoRate;
           document.querySelector('video').playbackRate = videoRate;
@@ -243,17 +264,21 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate', 'stepless-vid
         // 输入框改变事件
         rateInput.addEventListener('change', () => {
           let newRate = parseFloat(rateInput.value);
-          if (isNaN(newRate) || newRate < 0.1) newRate = 0.1;
-          if (newRate > 5.0) newRate = 5.0;
+          if (isNaN(newRate) || newRate < STEPLESS_VIDEO_RATE_MIN) {
+            newRate = STEPLESS_VIDEO_RATE_MIN;
+          }
+          if (newRate > STEPLESS_VIDEO_RATE_MAX) {
+            newRate = STEPLESS_VIDEO_RATE_MAX;
+          }
 
           rateInput.value = newRate;
           videoRate = newRate;
 
           document.querySelector('video').playbackRate = videoRate;
 
-          initialPositionY = -88 * (newRate / 5.0);
+          initialPositionY = calcPositionYByRate(newRate);
           dot.style.transform = `translateY(${initialPositionY}px)`;
-          bar.style.transform = `scaleY(${Math.abs(initialPositionY) / 88})`;
+          bar.style.transform = `scaleY(${calcBarScaleByPositionY(initialPositionY)})`;
 
           // 保存倍速到 storage
           saveVideoRate(videoRate);
@@ -276,11 +301,11 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate', 'stepless-vid
 
           rateInput.value = "1.0";
 
-          // 1.0倍速对应的位置：-88 * (1.0 / 5.0) = -17.6
-          document.querySelector('.stepless-video-rate-box .bui-thumb').style.transform = 'translateY(-17.6px)';
-          document.querySelector('.stepless-video-rate-box .bui-bar').style.transform = 'scaleY(0.2)';
+          // 2026-02-08：滑条加长后，重置位置使用统一换算函数。
+          document.querySelector('.stepless-video-rate-box .bui-thumb').style.transform = `translateY(${calcPositionYByRate(1.0)}px)`;
+          document.querySelector('.stepless-video-rate-box .bui-bar').style.transform = `scaleY(${1.0 / STEPLESS_VIDEO_RATE_MAX})`;
           mousePositionY = 0;
-          initialPositionY = -17.6;
+          initialPositionY = calcPositionYByRate(1.0);
 
           // 保存重置后的倍速到 storage
           saveVideoRate(videoRate);
