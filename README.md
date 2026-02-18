@@ -145,6 +145,7 @@ _Below is an example of how you can manual installing from source code._
 - [x] Hide all comments from a user by userID
 - [x] Hide Bilibili hot searches in the search box
 - [x] Stepless adjustment of video speed
+- [x] Reset stepless speed to 1.0x with one click
 - [ ] ......
 
 ## Patches

@@ -26,7 +26,7 @@
   border-radius: 4px; /* 更圆润的边角 */
   bottom: 41px;
   display: none;
-  height: 220px; /* 2026-02-08：加长无级倍速滑条，提高拖动调速精度 */
+  height: 248px; /* 2026-02-18：新增“重置”按钮后同步增高容器，避免进度条超出黑框 */
   left: 50%;
   margin-left: -22px; /* 居中修正 */
   position: absolute;
@@ -79,6 +79,25 @@
 .stepless-video-rate-input:focus {
   border-color: #00AEEC;
   background: rgba(0, 174, 236, 0.1);
+}
+
+.stepless-video-rate-reset-btn {
+  width: 34px;
+  height: 20px;
+  margin: 0 auto 8px;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  cursor: pointer;
+}
+
+.stepless-video-rate-reset-btn:hover {
+  border-color: rgba(0, 174, 236, 0.8);
+  background: rgba(0, 174, 236, 0.2);
 }
 
 .stepless-video-rate-progress {

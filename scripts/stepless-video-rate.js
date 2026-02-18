@@ -136,6 +136,7 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate', 'stepless-vid
         <div class="stepless-video-rate-btn-result">无级倍速</div>
         <div class="stepless-video-rate-box">
           <input type="number" class="stepless-video-rate-input" step="0.1" min="${STEPLESS_VIDEO_RATE_MIN}" max="${STEPLESS_VIDEO_RATE_MAX}" value="${videoRate}">
+          <button type="button" class="stepless-video-rate-reset-btn">重置</button>
           <div class="stepless-video-rate-progress bui bui-slider">
             <div class="bui-area">
               <div
@@ -178,6 +179,7 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate', 'stepless-vid
         const bar = document.querySelector('.stepless-video-rate-box .bui-bar');
         
         const rateInput = document.querySelector('.stepless-video-rate-box .stepless-video-rate-input');
+        const resetBtn = document.querySelector('.stepless-video-rate-box .stepless-video-rate-reset-btn');
         rateInput.value = videoRate;
 
         const steplessVideoRateBtn = document.querySelector('.stepless-video-rate-btn');
@@ -247,6 +249,23 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate', 'stepless-vid
 
         const steplessBtn = document.querySelector('.stepless-video-rate-btn-result')
 
+        // 2026-02-18：统一重置逻辑，保证“重置按钮”和“双击标题”行为一致。
+        function resetRateToOne() {
+          // 2026-02-18：先更新播放器倍速和全局状态，避免 UI 与实际播放速度不同步。
+          document.querySelector('video').playbackRate = 1.0;
+          videoRate = 1.0;
+          rateInput.value = '1.0';
+
+          // 2026-02-18：重置滑块位置与进度条高度，让 UI 回到 1.0x。
+          document.querySelector('.stepless-video-rate-box .bui-thumb').style.transform = `translateY(${calcPositionYByRate(1.0)}px)`;
+          document.querySelector('.stepless-video-rate-box .bui-bar').style.transform = `scaleY(${1.0 / STEPLESS_VIDEO_RATE_MAX})`;
+          mousePositionY = 0;
+          initialPositionY = calcPositionYByRate(1.0);
+
+          // 2026-02-18：保持跨标签页同步能力，重置后立即写入 storage。
+          saveVideoRate(videoRate);
+        }
+
         // 优化：防止事件冒泡 + 处理 Enter 键
         rateInput.addEventListener('keydown', (e) => {
             e.stopPropagation();
@@ -294,21 +313,14 @@ chrome.storage.sync.get(['biliplus-enable', 'stepless-video-rate', 'stepless-vid
            }
         });
 
+        // 2026-02-18：新增“进度条上方重置按钮”，单击即可恢复到 1.0x。
+        resetBtn.addEventListener('click', () => {
+          resetRateToOne();
+        });
+
         // double click to reset rate
         steplessBtn.addEventListener('dblclick', () => {
-          document.querySelector('video').playbackRate = 1.0;
-          videoRate = 1.0;
-
-          rateInput.value = "1.0";
-
-          // 2026-02-08：滑条加长后，重置位置使用统一换算函数。
-          document.querySelector('.stepless-video-rate-box .bui-thumb').style.transform = `translateY(${calcPositionYByRate(1.0)}px)`;
-          document.querySelector('.stepless-video-rate-box .bui-bar').style.transform = `scaleY(${1.0 / STEPLESS_VIDEO_RATE_MAX})`;
-          mousePositionY = 0;
-          initialPositionY = calcPositionYByRate(1.0);
-
-          // 保存重置后的倍速到 storage
-          saveVideoRate(videoRate);
+          resetRateToOne();
         });
       }else{
         disconnect();
