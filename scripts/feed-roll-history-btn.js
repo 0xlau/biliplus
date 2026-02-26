@@ -18,11 +18,10 @@ chrome.storage.sync.get(['biliplus-enable', 'feed-roll-history-btn'], storage =>
     </button>
 `;
 
-    const targetNode = document.querySelector('.recommended-container_floor-aside');
-    const disconnect = _UTILS.observe(targetNode, () => {
+    _UTILS.observe(document.body, () => {
       let feedRollBtn = document.getElementsByClassName('roll-btn')[0];
 
-      if (feedRollBtn) {
+      if (feedRollBtn && feedRollBtn.id !== 'feed-roll-btn') {
         // 处理返回上一页feed的历史内容
         let backBtn = document.createElement('button');
         feedRollBtn.parentNode.appendChild(backBtn);
@@ -76,9 +75,6 @@ chrome.storage.sync.get(['biliplus-enable', 'feed-roll-history-btn'], storage =>
             disableElementById('feed-roll-next-btn', true);
           });
         });
-
-        // disconnect observer
-        disconnect();
       }
     });
   }
