@@ -11,8 +11,8 @@ chrome.storage.sync.get(['biliplus-enable', 'hide-non-video-rcmd'], storage => {
                 // 如果已经被隐藏，跳过以节省性能
                 if (card.style.display === 'none') return;
 
-                // 直播卡片特殊类名直接判断
-                if (card.classList.contains('bili-live-card')) {
+                // 直播卡片和 floor-single-card（番剧/综艺/电影/漫画/赛事）直接隐藏
+                if (card.classList.contains('bili-live-card') || card.classList.contains('floor-single-card')) {
                     card.style.display = 'none';
                     return;
                 }
