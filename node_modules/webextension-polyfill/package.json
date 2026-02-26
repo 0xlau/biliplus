@@ -1,0 +1,71 @@
+{
+  "name": "webextension-polyfill",
+  "version": "0.12.0",
+  "description": "A lightweight polyfill library for Promise-based WebExtension APIs in Chrome.",
+  "main": "dist/browser-polyfill.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mozilla/webextension-polyfill.git"
+  },
+  "author": "Mozilla",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/mozilla/webextension-polyfill/issues"
+  },
+  "homepage": "https://github.com/mozilla/webextension-polyfill",
+  "devDependencies": {
+    "@babel/core": "7.18.10",
+    "@babel/eslint-parser": "7.19.1",
+    "@babel/preset-env": "7.18.10",
+    "@babel/register": "7.18.9",
+    "babel-preset-minify": "0.5.2",
+    "browserify": "17.0.0",
+    "chai": "4.3.6",
+    "chromedriver": "123.0.3",
+    "cross-env": "7.0.3",
+    "eslint": "8.35.0",
+    "finalhandler": "1.2.0",
+    "geckodriver": "4.3.3",
+    "global-replaceify": "1.0.0",
+    "grunt": "1.6.1",
+    "grunt-babel": "8.0.0",
+    "grunt-contrib-concat": "2.1.0",
+    "grunt-replace": "2.0.2",
+    "istanbul-lib-instrument": "5.2.0",
+    "jsdom": "20.0.0",
+    "mocha": "10.2.0",
+    "nyc": "15.1.0",
+    "selenium-webdriver": "4.8.1",
+    "serve-static": "1.15.0",
+    "shelljs": "0.8.5",
+    "sinon": "14.0.0",
+    "tape": "5.5.3",
+    "tape-async": "2.3.0",
+    "tmp": "0.2.1",
+    "webpack": "5.91.0",
+    "webpack-cli": "5.1.4"
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text",
+      "html"
+    ],
+    "instrument": false
+  },
+  "scripts": {
+    "build": "npm run lint && grunt",
+    "prepublish": "npm run build && npm run test",
+    "test": "mocha",
+    "lint": "eslint *.js src/*.js scripts/**/*.js test/**/*.js",
+    "test-coverage": "cross-env COVERAGE=y nyc mocha",
+    "test-minified": "cross-env TEST_MINIFIED_POLYFILL=1 mocha",
+    "test-integration": "tape test/integration/test-*",
+    "test-integration:chrome": "cross-env TEST_BROWSER_TYPE=chrome npm run test-integration",
+    "test-integration:firefox": "cross-env TEST_BROWSER_TYPE=firefox npm run test-integration",
+    "test-module-bundlers-smoketests": "./scripts/run-module-bundlers-smoketests.js"
+  }
+}
