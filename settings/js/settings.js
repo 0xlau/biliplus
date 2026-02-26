@@ -2,7 +2,7 @@ $(function () {
   $('input[type=checkbox]').each(function () {
     let key = $(this).data('key');
     chrome.storage.sync.get(key, storage => {
-      $(this).attr('checked', storage[key]);
+      $(this).prop('checked', !!storage[key]);
     });
 
     $(this).change(() => {
