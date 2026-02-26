@@ -1,19 +1,32 @@
 /**
- * 屏蔽首页非视频推荐 (直播/番剧/综艺/课堂/广告)
+ * 屏蔽首页非视频推荐 (直播/番剧/综艺/课堂/广告/漫画/赛事)
  */
 chrome.storage.sync.get(['biliplus-enable', 'hide-non-video-rcmd'], storage => {
     if (storage['biliplus-enable'] && storage['hide-non-video-rcmd']) {
-        const disconnect = _UTILS.observe(document.body, () => {
-            // 匹配 .bili-video-card, 旧版 .feed-card, 直播卡片 .bili-live-card, 以及番剧/综艺/电影专属的 .floor-single-card
+        // 用 CSS class 代替 inline style，减少被 B站 检测到的风险
+        const style = document.createElement('style');
+        style.textContent = '.biliplus-hidden { display: none !important; }';
+        document.head.appendChild(style);
+
+        const hideCard = (card) => {
+            // 向上找到 .feed-card 父容器（grid 单元格），隐藏整个格子消除黑块
+            const feedCard = card.closest('.feed-card');
+            if (feedCard) {
+                feedCard.classList.add('biliplus-hidden');
+            } else {
+                card.classList.add('biliplus-hidden');
+            }
+        };
+
+        _UTILS.observe(document.body, () => {
             const cards = document.querySelectorAll('.bili-video-card, .feed-card, .bili-live-card, .floor-single-card');
 
             cards.forEach(card => {
-                // 如果已经被隐藏，跳过以节省性能
-                if (card.style.display === 'none') return;
+                if (card.classList.contains('biliplus-hidden')) return;
 
                 // 直播卡片和 floor-single-card（番剧/综艺/电影/漫画/赛事）直接隐藏
                 if (card.classList.contains('bili-live-card') || card.classList.contains('floor-single-card')) {
-                    card.style.display = 'none';
+                    hideCard(card);
                     return;
                 }
 
@@ -23,7 +36,6 @@ chrome.storage.sync.get(['biliplus-enable', 'hide-non-video-rcmd'], storage => {
                 const badgeText = badgeElem ? badgeElem.innerText : '';
                 const isAdClass = card.querySelector('.bili-video-card__info--ad') !== null;
 
-                // 有些直播或者赛事卡片的文字会写在 bottom 区块里
                 const bottomElem = card.querySelector('.bili-video-card__info--bottom');
                 const bottomText = bottomElem ? bottomElem.innerText : '';
 
@@ -37,7 +49,7 @@ chrome.storage.sync.get(['biliplus-enable', 'hide-non-video-rcmd'], storage => {
                     (bottomText && bottomText.match(/直播|赛事/));
 
                 if (isNonVideo) {
-                    card.style.display = 'none';
+                    hideCard(card);
                 }
             });
         });
