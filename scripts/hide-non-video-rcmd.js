@@ -4,8 +4,8 @@
 chrome.storage.sync.get(['biliplus-enable', 'hide-non-video-rcmd'], storage => {
     if (storage['biliplus-enable'] && storage['hide-non-video-rcmd']) {
         const disconnect = _UTILS.observe(document.body, () => {
-            // 匹配 .bili-video-card, 旧版 .feed-card, 以及直播卡片 .bili-live-card
-            const cards = document.querySelectorAll('.bili-video-card, .feed-card, .bili-live-card');
+            // 匹配 .bili-video-card, 旧版 .feed-card, 直播卡片 .bili-live-card, 以及番剧/综艺/电影专属的 .floor-single-card
+            const cards = document.querySelectorAll('.bili-video-card, .feed-card, .bili-live-card, .floor-single-card');
 
             cards.forEach(card => {
                 // 如果已经被隐藏，跳过以节省性能
@@ -33,7 +33,7 @@ chrome.storage.sync.get(['biliplus-enable', 'hide-non-video-rcmd'], storage => {
                     link.includes('cheese/play') ||
                     link.includes('cm.bilibili.com') ||
                     isAdClass ||
-                    (badgeText && badgeText.match(/直播|番剧|国创|综艺|电影|课堂|广告/)) ||
+                    (badgeText && badgeText.match(/直播|番剧|国创|综艺|电影|课堂|广告|纪录片|电视剧|动画/)) ||
                     (bottomText && bottomText.match(/直播|赛事/));
 
                 if (isNonVideo) {
