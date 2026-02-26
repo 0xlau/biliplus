@@ -18,7 +18,20 @@ chrome.storage.sync.get(['biliplus-enable', 'hide-non-video-rcmd'], storage => {
             }
         };
 
+        let bannerRemoved = false;
+
         _UTILS.observe(document.body, () => {
+            // 自动关闭 B站 反插件警告横幅
+            if (!bannerRemoved) {
+                const banner = document.querySelector('.adblock-tips');
+                if (banner) {
+                    const closeBtn = banner.querySelector('svg, .close, .close-btn, [class*="close"]');
+                    if (closeBtn) closeBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                    else banner.remove();
+                    bannerRemoved = true;
+                }
+            }
+
             const cards = document.querySelectorAll('.bili-video-card, .feed-card, .bili-live-card, .floor-single-card');
 
             cards.forEach(card => {
