@@ -33,7 +33,10 @@
     }
   ],
   "background": {
-    "service_worker": "scripts/background/api-listener.js"
+    "service_worker": "scripts/background/api-listener.js",
+    "scripts": [
+      "scripts/background/api-listener.js"
+    ]
   },
   "permissions": ["storage", "webRequest", "tabs"],
   "host_permissions": ["*://*.bilibili.com/x/player/wbi/v2"],
