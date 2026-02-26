@@ -78,5 +78,10 @@
     "default_popup": "settings/settings.html",
     "default_icon": "logo.png"
   },
-  "author": "timothy-lau@outlook.com"
+  "author": "timothy-lau@outlook.com",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{d5707de1-b8ba-4467-bc30-f5baacdc3cd2}"
+    }
+  }
 }
