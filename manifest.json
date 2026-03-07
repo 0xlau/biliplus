@@ -72,7 +72,8 @@
     "tabs"
   ],
   "host_permissions": [
-    "*://*.bilibili.com/x/player/wbi/v2"
+    "*://*.bilibili.com/x/player/wbi/v2",
+    "*://api.bilibili.com/*"
   ],
   "action": {
     "default_popup": "settings/settings.html",
