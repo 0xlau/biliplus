@@ -358,7 +358,12 @@ class _BILIAPI {
    */
   static async getAIConclusion(params) {
     const query = await _UTILS.getwts(params);
-    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/view/conclusion/get?${query}`);
+    const response = await fetch(
+      `${_BILIAPI.BILIBILI_API}/x/web-interface/view/conclusion/get?${query}`,
+      {
+        credentials: "include"
+      }
+    );
     const jsonData = await response.json();
     if (response.status !== 200 || !jsonData) {
       throw new Error();
