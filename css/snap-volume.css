@@ -1,0 +1,15 @@
+/* SnapVolume Toast */
+#sv-toast {
+  background: rgba(0, 0, 0, 0.75) !important;
+  color: #ffffff !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  font-size: 16px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  z-index: 2147483647 !important;
+  opacity: 1 !important;
+  transition: opacity 0.3s ease-out !important;
+  pointer-events: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  display: block !important;
+}
