@@ -8,9 +8,19 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/common/utils.js", "scripts/feed-roll-history-btn.js", "scripts/clean-home-page.js"],
-      "matches": ["https://www.bilibili.com/*"],
-      "css": ["css/global.css", "css/feed-roll-history-btn.css", "css/clean-home-page.css"]
+      "js": [
+        "scripts/common/utils.js",
+        "scripts/feed-roll-history-btn.js",
+        "scripts/clean-home-page.js"
+      ],
+      "matches": [
+        "https://www.bilibili.com/*"
+      ],
+      "css": [
+        "css/global.css",
+        "css/feed-roll-history-btn.css",
+        "css/clean-home-page.css"
+      ]
     },
     {
       "js": [
@@ -23,23 +33,58 @@
         "scripts/hide-hot-search-list.js",
         "scripts/auto-subtitle.js"
       ],
-      "matches": ["https://*.bilibili.com/*"],
-      "css": ["css/global.css", "css/ai-conclusion.css"]
+      "matches": [
+        "https://*.bilibili.com/*"
+      ],
+      "css": [
+        "css/global.css",
+        "css/ai-conclusion.css"
+      ]
     },
     {
-      "js": ["scripts/common/utils.js", "scripts/common/bilibili-api.js", "scripts/hide-user-comment.js", "scripts/stepless-video-rate.js"],
-      "matches": ["https://www.bilibili.com/video/*", "https://www.bilibili.com/list/*", "https://www.bilibili.com/bangumi/play/*"],
-      "css": ["css/global.css", "css/stepless-video-rate-btn.css"]
+      "js": [
+        "scripts/common/utils.js",
+        "scripts/common/bilibili-api.js",
+        "scripts/hide-user-comment.js",
+        "scripts/stepless-video-rate.js"
+      ],
+      "matches": [
+        "https://www.bilibili.com/video/*",
+        "https://www.bilibili.com/list/*",
+        "https://www.bilibili.com/bangumi/play/*"
+      ],
+      "css": [
+        "css/global.css",
+        "css/stepless-video-rate-btn.css"
+      ]
     }
   ],
   "background": {
-    "service_worker": "scripts/background/api-listener.js"
+    "service_worker": "scripts/background/api-listener.js",
+    "scripts": [
+      "scripts/background/api-listener.js"
+    ]
   },
-  "permissions": ["storage", "webRequest", "tabs"],
-  "host_permissions": ["*://*.bilibili.com/x/player/wbi/v2"],
+  "permissions": [
+    "storage",
+    "webRequest",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*.bilibili.com/x/player/wbi/v2"
+  ],
   "action": {
     "default_popup": "settings/settings.html",
     "default_icon": "logo.png"
   },
-  "author": "timothy-lau@outlook.com"
+  "author": "timothy-lau@outlook.com",
+  "browser_specific_settings": {
+    "gecko": {
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  }
 }
