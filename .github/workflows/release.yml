@@ -1,0 +1,117 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to publish again (for example, v1.1.0)
+        required: true
+        type: string
+
+concurrency:
+  group: biliplus-release
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      sha: ${{ steps.release.outputs.sha }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Create or update the release pull request
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    needs: release-please
+    if: >-
+      always() &&
+      ((github.event_name == 'push' && needs.release-please.outputs.release_created == 'true') ||
+      github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      CHROME_WEB_STORE_EXTENSION_ID: liddcdcjkpeaiblhebgihpmcaknpgbgk
+      CHROME_WEB_STORE_PUBLISHER_ID: d8f6da75-8e0b-4923-87ad-3f762771918c
+    steps:
+      - name: Check out the released source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || needs.release-please.outputs.sha }}
+
+      - name: Validate release metadata
+        id: release-metadata
+        env:
+          AUTOMATIC_TAG: ${{ needs.release-please.outputs.tag_name }}
+          MANUAL_TAG: ${{ inputs.tag }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            release_tag="$MANUAL_TAG"
+          else
+            release_tag="$AUTOMATIC_TAG"
+          fi
+
+          manifest_version="$(jq -er '.version' manifest.json)"
+          version_file="$(tr -d '\r\n' < version.txt)"
+
+          if [[ "$release_tag" != "v$manifest_version" ]]; then
+            echo "Release tag $release_tag does not match manifest version $manifest_version" >&2
+            exit 1
+          fi
+
+          if [[ "$version_file" != "$manifest_version" ]]; then
+            echo "version.txt ($version_file) does not match manifest.json ($manifest_version)" >&2
+            exit 1
+          fi
+
+          echo "tag=$release_tag" >> "$GITHUB_OUTPUT"
+          echo "version=$manifest_version" >> "$GITHUB_OUTPUT"
+
+      - name: Build extension package
+        run: make zip
+
+      - name: Attach package to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release-metadata.outputs.tag }}
+        run: gh release upload "$RELEASE_TAG" biliplus.zip --clobber
+
+      - name: Validate publishing configuration
+        env:
+          WORKLOAD_IDENTITY_PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          SERVICE_ACCOUNT: ${{ vars.CHROME_WEB_STORE_SERVICE_ACCOUNT }}
+        run: |
+          : "${WORKLOAD_IDENTITY_PROVIDER:?Set the GCP_WORKLOAD_IDENTITY_PROVIDER repository variable}"
+          : "${SERVICE_ACCOUNT:?Set the CHROME_WEB_STORE_SERVICE_ACCOUNT repository variable}"
+
+      - name: Authenticate to Google Cloud
+        id: google-auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.CHROME_WEB_STORE_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/chromewebstore
+          create_credentials_file: false
+
+      - name: Upload to Chrome Web Store and submit for review
+        env:
+          ACCESS_TOKEN: ${{ steps.google-auth.outputs.access_token }}
+          EXPECTED_VERSION: ${{ steps.release-metadata.outputs.version }}
+          PACKAGE_PATH: biliplus.zip
+        run: .github/scripts/publish-chrome-web-store.sh
