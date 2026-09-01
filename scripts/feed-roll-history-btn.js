@@ -2,100 +2,172 @@
  * 首页“换一换”回溯功能实现
  */
 chrome.storage.sync.get(['biliplus-enable', 'feed-roll-history-btn'], storage => {
-  if (storage['biliplus-enable'] && storage['feed-roll-history-btn']) {
-    const feedHistory = [];
-    let feedHistoryIndex = 0;
+  if (!storage['biliplus-enable'] || !storage['feed-roll-history-btn']) {
+    return;
+  }
 
-    const feedRollBackBtn = `
-    <button id="feed-roll-back-btn" class="primary-btn feed-roll-back-btn biliplus-disabled">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5.82843 6.99955L8.36396 9.53509L6.94975 10.9493L2 5.99955L6.94975 1.0498L8.36396 2.46402L5.82843 4.99955H13C17.4183 4.99955 21 8.58127 21 12.9996C21 17.4178 17.4183 20.9996 13 20.9996H4V18.9996H13C16.3137 18.9996 19 16.3133 19 12.9996C19 9.68584 16.3137 6.99955 13 6.99955H5.82843Z"></path></svg>
-    </button>
-`;
+  const feedHistory = [];
+  // 当索引等于历史长度时，表示当前页面是尚未保存的新一页。
+  let feedHistoryIndex = 0;
 
-    const feedRollNextBtn = `
-    <button id="feed-roll-next-btn" class="primary-btn feed-roll-next-btn biliplus-disabled">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18.1716 6.99955H11C7.68629 6.99955 5 9.68584 5 12.9996C5 16.3133 7.68629 18.9996 11 18.9996H20V20.9996H11C6.58172 20.9996 3 17.4178 3 12.9996C3 8.58127 6.58172 4.99955 11 4.99955H18.1716L15.636 2.46402L17.0503 1.0498L22 5.99955L17.0503 10.9493L15.636 9.53509L18.1716 6.99955Z"></path></svg>
-    </button>
-`;
+  const backIconPath =
+    'M5.82843 6.99955L8.36396 9.53509L6.94975 10.9493L2 5.99955L6.94975 1.0498L8.36396 2.46402L5.82843 4.99955H13C17.4183 4.99955 21 8.58127 21 12.9996C21 17.4178 17.4183 20.9996 13 20.9996H4V18.9996H13C16.3137 18.9996 19 16.3133 19 12.9996C19 9.68584 16.3137 6.99955 13 6.99955H5.82843Z';
+  const nextIconPath =
+    'M18.1716 6.99955H11C7.68629 6.99955 5 9.68584 5 12.9996C5 16.3133 7.68629 18.9996 11 18.9996H20V20.9996H11C6.58172 20.9996 3 17.4178 3 12.9996C3 8.58127 6.58172 4.99955 11 4.99955H18.1716L15.636 2.46402L17.0503 1.0498L22 5.99955L17.0503 10.9493L15.636 9.53509L18.1716 6.99955Z';
 
-    const targetNode = document.querySelector('.recommended-container_floor-aside');
-    const disconnect = _UTILS.observe(targetNode, () => {
-      let feedRollBtn = document.getElementsByClassName('roll-btn')[0];
+  const createFeedRollButton = (id, className, label, iconPath) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.id = id;
+    button.className = `primary-btn ${className} biliplus-disabled`;
+    button.disabled = true;
+    button.setAttribute('aria-label', label);
 
-      if (feedRollBtn) {
-        // 处理返回上一页feed的历史内容
-        let backBtn = document.createElement('button');
-        feedRollBtn.parentNode.appendChild(backBtn);
-        backBtn.outerHTML = feedRollBackBtn;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'currentColor');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', iconPath);
+    svg.appendChild(path);
+    button.appendChild(svg);
+    return button;
+  };
 
-        document.getElementById('feed-roll-back-btn').addEventListener('click', () => {
-          let feedCards = document.getElementsByClassName('feed-card');
-          if (feedHistoryIndex == feedHistory.length) {
-            feedHistory.push(listInnerHTMLOfFeedCard(feedCards));
-          }
-          for (let fc_i = 0; fc_i < feedCards.length; fc_i++) {
-            feedCards[fc_i].innerHTML = feedHistory[feedHistoryIndex - 1][fc_i];
-          }
-          feedHistoryIndex = feedHistoryIndex - 1;
-          if (feedHistoryIndex == 0) {
-            disableElementById('feed-roll-back-btn', true);
-          }
-          disableElementById('feed-roll-next-btn', false);
-        });
+  const listInnerHTMLOfFeedCard = () =>
+    Array.from(document.getElementsByClassName('feed-card'), feedCard => feedCard.innerHTML);
 
-        // 处理返回下一页feed的历史内容
-        let nextBtn = document.createElement('div');
-        feedRollBtn.parentNode.appendChild(nextBtn);
-        nextBtn.outerHTML = feedRollNextBtn;
+  const setButtonDisabled = (id, disabled) => {
+    const button = document.getElementById(id);
+    if (!button) {
+      return;
+    }
+    button.disabled = disabled;
+    button.classList.toggle('biliplus-disabled', disabled);
+  };
 
-        document.getElementById('feed-roll-next-btn').addEventListener('click', () => {
-          let feedCards = document.getElementsByClassName('feed-card');
+  const updateButtonStates = () => {
+    setButtonDisabled('feed-roll-back-btn', feedHistoryIndex <= 0);
+    setButtonDisabled(
+      'feed-roll-next-btn',
+      feedHistoryIndex >= feedHistory.length - 1
+    );
+  };
 
-          for (let fc_i = 0; fc_i < feedCards.length; fc_i++) {
-            feedCards[fc_i].innerHTML = feedHistory[feedHistoryIndex + 1][fc_i];
-          }
+  const restoreFeed = snapshot => {
+    if (!snapshot) {
+      return;
+    }
 
-          feedHistoryIndex = feedHistoryIndex + 1;
-          if (feedHistoryIndex == feedHistory.length - 1) {
-            disableElementById('feed-roll-next-btn', true);
-          }
-          disableElementById('feed-roll-back-btn', false);
-        });
+    const feedCards = document.getElementsByClassName('feed-card');
+    const count = Math.min(feedCards.length, snapshot.length);
+    for (let index = 0; index < count; index++) {
+      feedCards[index].innerHTML = snapshot[index];
+    }
+  };
 
-        // 处理点击换一换事件
-        feedRollBtn.id = 'feed-roll-btn';
-        feedRollBtn.addEventListener('click', () => {
-          // 等待元素加载
-          setTimeout(() => {
-            if (feedHistoryIndex == feedHistory.length) {
-              let feedCards = listInnerHTMLOfFeedCard(document.getElementsByClassName('feed-card'));
-              feedHistory.push(feedCards);
-            }
-            feedHistoryIndex = feedHistory.length;
-            disableElementById('feed-roll-back-btn', false);
-            disableElementById('feed-roll-next-btn', true);
-          });
-        });
+  const saveCurrentFeedBeforeRoll = () => {
+    const currentFeed = listInnerHTMLOfFeedCard();
+    if (currentFeed.length === 0) {
+      return;
+    }
 
-        // disconnect observer
-        disconnect();
+    if (feedHistoryIndex === feedHistory.length) {
+      // 当前页尚未进入历史，先保存再让 B 站执行“换一换”。
+      feedHistory.push(currentFeed);
+    } else {
+      // 从历史页重新“换一换”时，应丢弃原来的前进分支。
+      feedHistory[feedHistoryIndex] = currentFeed;
+      feedHistory.splice(feedHistoryIndex + 1);
+    }
+
+    // B 站更新后显示的页面暂不保存，在回退时再按需保存。
+    feedHistoryIndex = feedHistory.length;
+    updateButtonStates();
+  };
+
+  const handleBack = () => {
+    if (feedHistoryIndex === feedHistory.length) {
+      const currentFeed = listInnerHTMLOfFeedCard();
+      if (currentFeed.length > 0) {
+        feedHistory.push(currentFeed);
       }
+    }
+
+    if (feedHistoryIndex <= 0) {
+      updateButtonStates();
+      return;
+    }
+
+    feedHistoryIndex -= 1;
+    restoreFeed(feedHistory[feedHistoryIndex]);
+    updateButtonStates();
+  };
+
+  const handleNext = () => {
+    if (feedHistoryIndex >= feedHistory.length - 1) {
+      updateButtonStates();
+      return;
+    }
+
+    feedHistoryIndex += 1;
+    restoreFeed(feedHistory[feedHistoryIndex]);
+    updateButtonStates();
+  };
+
+  const mountButtons = () => {
+    const feedRollBtn = document.querySelector('.roll-btn');
+    if (!feedRollBtn || !feedRollBtn.parentElement) {
+      return false;
+    }
+
+    if (!document.getElementById('feed-roll-back-btn')) {
+      const backButton = createFeedRollButton(
+        'feed-roll-back-btn',
+        'feed-roll-back-btn',
+        '返回上一组推荐',
+        backIconPath
+      );
+      const nextButton = createFeedRollButton(
+        'feed-roll-next-btn',
+        'feed-roll-next-btn',
+        '前往下一组推荐',
+        nextIconPath
+      );
+      const insertionPoint = feedRollBtn.nextSibling;
+      feedRollBtn.parentElement.insertBefore(backButton, insertionPoint);
+      feedRollBtn.parentElement.insertBefore(nextButton, insertionPoint);
+      backButton.addEventListener('click', handleBack);
+      nextButton.addEventListener('click', handleNext);
+      updateButtonStates();
+    }
+
+    return true;
+  };
+
+  // 在捕获阶段、B 站自身的点击处理之前保存当前推荐。
+  // 使用事件委托也能兼容首页重新创建“换一换”按钮的情况。
+  document.addEventListener(
+    'click',
+    event => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('.roll-btn')) {
+        saveCurrentFeedBeforeRoll();
+      }
+    },
+    true
+  );
+
+  // Firefox/Zen 中内容脚本执行时，首页推荐容器可能尚未挂载。
+  // 先立即查找；找不到时观察稳定存在的 documentElement，避免 observe(null) 抛错。
+  if (!mountButtons()) {
+    const observer = new MutationObserver(() => {
+      if (mountButtons()) {
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
     });
   }
 });
-
-function disableElementById(id, bool) {
-  if (bool) {
-    document.getElementById(id).classList.add('biliplus-disabled');
-  } else {
-    document.getElementById(id).classList.remove('biliplus-disabled');
-  }
-}
-
-function listInnerHTMLOfFeedCard(feedCardElements) {
-  let feedCardInnerHTMLs = [];
-  for (let fc of feedCardElements) {
-    feedCardInnerHTMLs.push(fc.innerHTML);
-  }
-  return feedCardInnerHTMLs;
-}

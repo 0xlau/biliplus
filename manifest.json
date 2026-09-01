@@ -33,13 +33,22 @@
     }
   ],
   "background": {
-    "service_worker": "scripts/background/api-listener.js"
+    "service_worker": "scripts/background/api-listener.js",
+    "scripts": ["scripts/background/api-listener.js"]
   },
   "permissions": ["storage", "webRequest", "tabs"],
   "host_permissions": ["*://*.bilibili.com/x/player/wbi/v2"],
   "action": {
     "default_popup": "settings/settings.html",
     "default_icon": "logo.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "biliplus@0xlau.dev",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
   },
   "author": "timothy-lau@outlook.com"
 }
