@@ -365,4 +365,232 @@ class _BILIAPI {
     }
     return jsonData.data;
   }
+
+  /**
+   * 获取稿件 view 信息（x/web-interface/view）
+   * 与 getVideoInfo 的区别：失效或网络异常时不抛错，返回 { code, data, message }，
+   * 供需要根据 code 判断失效原因（-404/62002/62004/62012）的场景使用
+   */
+  static async getVideoView({ aid, bvid }) {
+    const query = bvid ? `bvid=${encodeURIComponent(bvid)}` : `aid=${encodeURIComponent(aid)}`;
+    try {
+      const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/view?${query}`, {
+        credentials: 'include'
+      });
+      const jsonData = await response.json();
+      return {
+        code: jsonData?.code,
+        data: jsonData?.data || null,
+        message: jsonData?.message
+      };
+    } catch (e) {
+      return { code: -1, data: null, message: String(e) };
+    }
+  }
+
+  /**
+   * 获取视频分 P 列表（x/player/pagelist）
+   * @returns 成功返回分 P 数组，失败返回 []
+   */
+  static async getPageList(aid) {
+    try {
+      const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/player/pagelist?aid=${encodeURIComponent(aid)}`, {
+        credentials: 'include'
+      });
+      const jsonData = await response.json();
+      if (jsonData?.code !== 0 || !Array.isArray(jsonData.data)) {
+        return [];
+      }
+      return jsonData.data;
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * 获取收藏夹内容列表（x/v3/fav/resource/list）
+   * @param {object} params { mediaId: 收藏夹 id, pn: 页码, ps: 每页数量 }
+   * @returns 成功返回 data（含 medias 数组），失败返回 null
+   */
+  static async getFavResourceList({ mediaId, pn = 1, ps = 20 }) {
+    const params = new URLSearchParams({
+      media_id: String(mediaId),
+      pn: String(pn),
+      ps: String(ps),
+      keyword: '',
+      order: 'mtime',
+      type: '0',
+      tid: '0',
+      platform: 'web'
+    });
+    try {
+      const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/v3/fav/resource/list?${params}`, {
+        credentials: 'include'
+      });
+      const jsonData = await response.json();
+      if (jsonData?.code !== 0) {
+        return null;
+      }
+      return jsonData.data;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * 通过 background（api-listener.js）代理请求第三方归档站，绕过 CORS。
+   * 仅 ARCHIVE_PREFIXES 白名单内的地址会被 background 放行
+   */
+  static fetchArchive(url) {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ type: 'biliplus-archive-fetch', url }, res => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+          return;
+        }
+        if (!res?.ok) {
+          const error = new Error(res?.error || 'archive fetch failed');
+          error.status = res?.status;
+          reject(error);
+          return;
+        }
+        resolve(res);
+      });
+    });
+  }
+
+  /** fetchArchive 的 JSON 版本，响应体解析失败返回 null */
+  static async fetchArchiveJson(url) {
+    const res = await this.fetchArchive(url);
+    try {
+      return JSON.parse(res.text);
+    } catch {
+      return null;
+    }
+  }
+
+  static isArchive503(json, error) {
+    if (json?.code === -503) {
+      return true;
+    }
+    if (!error) {
+      return false;
+    }
+    return error.status === 503 || /\b503\b/.test(String(error.message || ''));
+  }
+
+  /** 遇 HTTP/JSON -503 等 2s 后再请求一次；都失败返回 null */
+  static async fetchArchiveJsonRetry503(url) {
+    const attempt = async () => {
+      try {
+        return { json: await this.fetchArchiveJson(url), error: null };
+      } catch (error) {
+        return { json: null, error };
+      }
+    };
+    let { json, error } = await attempt();
+    if (this.isArchive503(json, error)) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      ({ json, error } = await attempt());
+    }
+    if (error || json?.code === -503) {
+      return null;
+    }
+    return json;
+  }
+
+  /**
+   * biliplus.com 批量稿件信息接口（/api/aidinfo），每 20 个 aid 一组
+   * @returns Map<aid字符串, { aid, title, pic, author, mid }>
+   */
+  static async getBiliplusAidInfo(aids) {
+    const result = new Map();
+    const list = (aids || []).map(id => String(id)).filter(Boolean);
+    if (list.length === 0) {
+      return result;
+    }
+    const chunkSize = 20;
+    for (let i = 0; i < list.length; i += chunkSize) {
+      const chunk = list.slice(i, i + chunkSize);
+      const url = `https://www.biliplus.com/api/aidinfo?aid=${chunk.join(',')}`;
+      const json = await this.fetchArchiveJsonRetry503(url);
+      if (json?.code !== 0 || !json.data) {
+        continue;
+      }
+      for (const [aid, info] of Object.entries(json.data)) {
+        if (!info) {
+          continue;
+        }
+        result.set(String(aid), {
+          aid: Number(aid),
+          title: info.title,
+          pic: info.pic,
+          author: info.author,
+          mid: info.mid
+        });
+      }
+    }
+    return result;
+  }
+
+  /**
+   * biliplus.com 单查稿件接口（/api/view）
+   * @returns { aid, bvid, title, pic, first_frame, author, mid, owner } | null
+   */
+  static async getBiliplusView(aid) {
+    const url = `https://www.biliplus.com/api/view?id=${encodeURIComponent(aid)}`;
+    const json = await this.fetchArchiveJsonRetry503(url);
+    if (!json || json.code === -404 || json.code === -403) {
+      return null;
+    }
+    const v2 = json.v2_app_api || {};
+    return {
+      aid: Number(json.aid || json.id || aid),
+      bvid: v2.bvid,
+      title: v2.title || json.title,
+      pic: v2.pic || json.pic,
+      first_frame: v2.first_frame,
+      author: v2.owner?.name || json.author,
+      mid: v2.owner?.mid || json.mid,
+      owner: v2.owner
+    };
+  }
+
+  /**
+   * jijidown.com 稿件信息接口（/api/v1/video/get_info）。
+   * 归档站返回 msg: "loading" / title: "正在加载数据..." 表示正在抓取，等待 1.2s 后重试，最多 2 次。
+   * pic 只有是 B 站 hdslb 图床时才会被 mergeMeta 采纳（见 _UTILS.isGoodCoverUrl）。
+   */
+  static async getJijidownInfo(aid) {
+    const url = `https://www.jijidown.com/api/v1/video/get_info?id=${encodeURIComponent(aid)}`;
+    let json = null;
+    for (let attempt = 0; attempt <= 2; attempt++) {
+      try {
+        json = await this.fetchArchiveJson(url);
+      } catch {
+        return null;
+      }
+      if (json && (json.msg === 'loading' || json.title === '正在加载数据...')) {
+        if (attempt < 2) {
+          await new Promise(resolve => setTimeout(resolve, 1200));
+          continue;
+        }
+        return null;
+      }
+      break;
+    }
+    if (!json || !json.upid || json.upid <= 0) {
+      return null;
+    }
+    if (!_UTILS.isUsableTitle(json.title, aid) && !json.img) {
+      return null;
+    }
+    return {
+      aid: Number(aid),
+      title: json.title,
+      pic: json.img,
+      author: json.up?.author,
+      mid: json.upid
+    };
+  }
 }
