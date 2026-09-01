@@ -99,5 +99,25 @@ class _UTILS {
     const disconnect = () => observer.disconnect();
     return disconnect;
   }
-  
+
+  //时间戳转时间
+  static formatTime(time) {
+    const date = new Date(time * 1000);
+    // 如果time距离现在超过10小时显示具体时间，小于1小时显示“n分钟前” 否则显示“n小时前”
+    const now = new Date();
+    const diff = (now - date) / 1000;
+    if (diff < 3600) {
+      return `${Math.floor(diff / 60)}分钟前`;
+    }
+    if (diff < 36000) {
+      return `${Math.floor(diff / 3600)}小时前`;
+    } else {
+      //分钟数小于10的时候前面加0
+      if (date.getMinutes() < 10) {
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:0${date.getMinutes()}`;
+      }
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+    }
+
+  }
 }
