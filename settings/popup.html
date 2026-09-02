@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>BiliPlus</title>
+    <link rel="stylesheet" href="./css/settings.css" />
+    <script src="./js/popup.js" defer></script>
+  </head>
+  <body class="popup-page" aria-busy="true">
+    <header class="popup-header">
+      <div class="brand">
+        <img src="./img/logo_128.png" alt="" width="34" height="34" />
+        <span>BiliPlus</span>
+      </div>
+      <span class="version" id="extension-version">1.1.0</span>
+    </header>
+
+    <main>
+      <label class="popup-master">
+        <span>
+          <strong id="master-title">增强已暂停</strong>
+          <small id="master-description">开启后应用已保存的设置</small>
+        </span>
+        <input type="checkbox" id="master-toggle" disabled />
+        <span class="switch" aria-hidden="true"></span>
+      </label>
+
+      <p class="module-summary" id="module-summary" role="status" aria-live="polite">正在读取设置…</p>
+      <div class="module-list" aria-label="设置分类">
+        <button type="button" data-open-section="home">
+          <span class="module-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-9Z" /></svg>
+          </span>
+          <span><strong>首页</strong><small id="home-summary">净化推荐与换一换历史</small></span>
+          <svg class="chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" /></svg>
+        </button>
+        <button type="button" data-open-section="playback">
+          <span class="module-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z" /></svg>
+          </span>
+          <span><strong>播放</strong><small id="playback-summary">倍速、宽屏与连播</small></span>
+          <svg class="chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" /></svg>
+        </button>
+        <button type="button" data-open-section="search">
+          <span class="module-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="m20 20-4.3-4.3m2.3-5.2a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" /></svg>
+          </span>
+          <span><strong>搜索</strong><small id="search-summary">热搜净化与扩展历史</small></span>
+          <svg class="chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" /></svg>
+        </button>
+      </div>
+
+      <button type="button" class="open-settings" id="open-settings">
+        打开完整设置
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 5h5v5m0-5-8 8m7 0v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+      </button>
+    </main>
+  </body>
+</html>

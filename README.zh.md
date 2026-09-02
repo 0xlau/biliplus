@@ -79,7 +79,7 @@
 [Bilibili.com](https://bilibili.com) 其实已经有一个完美的用户体验，但作为一个细节控的开发者，可能还有一些地方让我们感到不舒服，所以这个扩展诞生了。
 
 设计原则:
-* 影响原始外观。
+* 不影响原始外观。
 * 保持哔哩哔哩的一贯风格。
 * 如果你在哔哩哔哩网站冲浪体验不舒服，请前来提交建议。
 
@@ -131,13 +131,18 @@ _以下是如何从源代码手动安装的示例。_
 <!-- ROADMAP -->
 ## 路线图
 
-- [x] 首页干净模式
-- [x] 首页 “换一换” 回溯功能
-- [x] 显示视频封面 AI 总结
+- [x] 首页清爽模式（自动补齐网格并加载下一批推荐）
+- [x] 首页“换一换”回溯、B 站原生图标与 R 快捷键
+- [x] 隐藏首页直播、广告卡片与直播间侧栏，卡片自然补位
+- [x] 显示视频封面 AI 总结（使用当前 B 站登录态）
+- [x] 拒绝信息茧房模式：推荐与公开视频列表请求不带 Cookie
 - [x] 显示视频观看人数
 - [x] 隐藏某个用户的所有评论
-- [x] 隐藏搜索框中 bilibili 热搜
-- [x] 无级调节视频速度
+- [x] 搜索净化、搜索联想保留与扩展本地历史
+- [x] B 站原生样式的精确倍速输入、滚轮、快捷键与跨视频记忆
+- [x] 自动宽屏与可配置连播行为
+- [x] 独立完整设置页与精简扩展弹窗
+- [x] 按需授权第三方归档，尝试还原失效视频的标题、封面与链接
 - [ ] ......
 
 ## 补丁
@@ -179,8 +184,6 @@ MIT License。可以查看 `LICENSE.txt` 获取更多详情。
 ## 鸣谢
 
 * [Github-biliscope](https://github.com/gaogaotiantian/biliscope)
-* [DaisyUI](https://daisyui.com/)
-* [Tailwindcss](https://tailwindcss.com/)
 * [Chrome Extension Docs](https://developer.chrome.com/docs/extensions)
 * [Remixicon](https://remixicon.com/)
 * [Img Shields](https://shields.io)

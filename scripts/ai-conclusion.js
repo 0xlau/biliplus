@@ -3,67 +3,113 @@
  */
 
 const aiData = {};
+const aiRequests = new Map();
+let aiConclusionEnabled = false;
 
-chrome.storage.sync.get(['biliplus-enable', 'ai-conclusion'], storage => {
-  if (storage['biliplus-enable'] && storage['ai-conclusion']) {
-    const container = document.querySelector('body');
+const syncAIConclusionSetting = storage => {
+  aiConclusionEnabled = Boolean(
+    storage['biliplus-enable'] && storage['ai-conclusion']
+  );
+  if (!aiConclusionEnabled) {
+    document
+      .querySelectorAll(
+        '.biliplus-ai-conclusion-button, .biliplus-ai-conclusion-card'
+      )
+      .forEach(element => element.remove());
+  }
+};
 
-    container.addEventListener('mouseover', async e => {
-      const target = e.target;
-      if (target.nodeName === 'IMG' && target.parentElement.classList.contains('bili-video-card__cover')) {
-        const cardElement = _UTILS.findParentElement(target, e => e.classList.contains('bili-video-card'));
-        if (cardElement == null) {
-          return;
-        }
-        // 忽略广告卡片
-        if (cardElement.innerHTML.indexOf('bili-video-card__info--ad') != -1) {
-          return;
-        }
-        const cardImageLinkElement = _UTILS.findParentElement(target, e => e.className == 'bili-video-card__image--link');
-        const cardImageWrapElement = _UTILS.findParentElement(target, e => e.className == 'bili-video-card__image--wrap');
+const findAICardParts = target => {
+  if (!(target instanceof Element) || target.tagName !== 'IMG') return null;
+  const cardElement = target.closest('.bili-video-card, .feed-card');
+  if (!cardElement || cardElement.querySelector('.bili-video-card__info--ad')) {
+    return null;
+  }
 
-        let bvid = _UTILS.getBvidFromUrl(cardImageLinkElement.getAttribute('href'));
-        if (aiData[bvid]) {
-          if (aiData[bvid].code === 0) {
-            createAIButtonElement(cardImageWrapElement, bvid);
-          }
-          return;
-        }
-        let cid = cardImageLinkElement.getAttribute('data-biliplus-cid');
-        let up_mid = cardImageLinkElement.getAttribute('data-biliplus-up_mid');
-        if (cid == null || up_mid == null) {
-          try {
-            const videoInfo = await _BILIAPI.getVideoInfo(bvid);
-            console.log(videoInfo);
-            cardImageLinkElement.setAttribute('data-biliplus-aid', videoInfo.aid);
-            cardImageLinkElement.setAttribute('data-biliplus-cid', videoInfo.cid);
-            cardImageLinkElement.setAttribute('data-biliplus-bvid', videoInfo.bvid);
-            cardImageLinkElement.setAttribute('data-biliplus-up_mid', videoInfo.owner.mid);
-            aid = videoInfo.aid;
-            cid = videoInfo.cid;
-            bvid = videoInfo.bvid;
-            up_mid = videoInfo.owner.mid;
-          } catch (e) {
-            console.error(e);
-            return;
-          }
-        }
-        const aiConclusionRes = await _BILIAPI.getAIConclusion({
-          bvid,
-          cid,
-          up_mid
-        });
-        aiData[bvid] = aiConclusionRes;
-        console.log('aiConclusionRes', aiConclusionRes);
-        if (aiConclusionRes.code === 0) {
-          createAIButtonElement(cardImageWrapElement, bvid);
-        }
+  const cardImageWrapElement =
+    target.closest('.bili-video-card__image--wrap') ||
+    cardElement.querySelector('.bili-video-card__image--wrap');
+  const cardImageLinkElement =
+    target.closest('a[href*="/video/"]') ||
+    cardImageWrapElement?.querySelector('a[href*="/video/"]') ||
+    cardElement.querySelector('a[href*="/video/"]');
+  if (!cardImageWrapElement || !cardImageLinkElement) return null;
+  return { cardElement, cardImageWrapElement, cardImageLinkElement };
+};
+
+const loadAIConclusion = async cardImageLinkElement => {
+  let bvid = _UTILS.getBvidFromUrl(
+    cardImageLinkElement.getAttribute('href') || ''
+  );
+  if (!bvid) return null;
+  if (aiData[bvid]) return { bvid, conclusion: aiData[bvid] };
+  if (aiRequests.has(bvid)) return aiRequests.get(bvid);
+
+  const request = (async () => {
+    try {
+      let cid = cardImageLinkElement.dataset.biliplusCid;
+      let upMid = cardImageLinkElement.dataset.biliplusUpMid;
+      if (!cid || !upMid) {
+        const videoInfo = await _BILIAPI.getVideoInfo(bvid);
+        bvid = videoInfo.bvid || bvid;
+        cid = String(videoInfo.cid);
+        upMid = String(videoInfo.owner.mid);
+        cardImageLinkElement.dataset.biliplusAid = String(videoInfo.aid);
+        cardImageLinkElement.dataset.biliplusCid = cid;
+        cardImageLinkElement.dataset.biliplusBvid = bvid;
+        cardImageLinkElement.dataset.biliplusUpMid = upMid;
       }
-    });
+      const conclusion = await _BILIAPI.getAIConclusion({
+        bvid,
+        cid,
+        up_mid: upMid,
+      });
+      aiData[bvid] = conclusion;
+      return { bvid, conclusion };
+    } catch (error) {
+      console.error('获取 AI 视频总结失败', error);
+      const conclusion = { code: -1, message: 'AI 总结请求失败，请稍后重试' };
+      aiData[bvid] = conclusion;
+      return { bvid, conclusion };
+    } finally {
+      aiRequests.delete(bvid);
+    }
+  })();
+  aiRequests.set(bvid, request);
+  return request;
+};
+
+document.addEventListener('mouseover', async event => {
+  if (!aiConclusionEnabled) return;
+  const parts = findAICardParts(event.target);
+  if (!parts) return;
+  const result = await loadAIConclusion(parts.cardImageLinkElement);
+  if (!result || !aiConclusionEnabled || !parts.cardImageWrapElement.isConnected) {
+    return;
+  }
+  createAIButtonElement(parts.cardImageWrapElement, result.bvid);
+});
+
+chrome.storage.sync.get(
+  ['biliplus-enable', 'ai-conclusion'],
+  syncAIConclusionSetting
+);
+chrome.storage.onChanged?.addListener((changes, areaName) => {
+  if (
+    areaName === 'sync' &&
+    (changes['biliplus-enable'] || changes['ai-conclusion'])
+  ) {
+    chrome.storage.sync.get(
+      ['biliplus-enable', 'ai-conclusion'],
+      syncAIConclusionSetting
+    );
   }
 });
 
 const createAIButtonElement = (cardImageWrapElement, bvid) => {
+  if (cardImageWrapElement.querySelector('.biliplus-ai-conclusion-button')) {
+    return;
+  }
   const aiIcon = `
     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
       <g clip-path="url(#clip0_8665_4990)">
@@ -139,8 +185,11 @@ const createAIButtonElement = (cardImageWrapElement, bvid) => {
     </svg>
       `;
   const btn = document.createElement('button');
+  btn.type = 'button';
   btn.innerHTML = aiIcon;
   btn.className = 'biliplus-ai-conclusion-button';
+  btn.title = '查看 AI 视频总结';
+  btn.setAttribute('aria-label', '查看 AI 视频总结');
   cardImageWrapElement.appendChild(btn);
   cardImageWrapElement.addEventListener('mouseleave', () => {
     btn.remove();
@@ -158,10 +207,14 @@ const createAIButtonElement = (cardImageWrapElement, bvid) => {
 
 const genterateAIConclusionCard = (aiConclusionRes, aiCardElement, bvid) => {
   let aiCard = '';
-  const { model_result } = aiConclusionRes;
-  if (aiConclusionRes.code !== 0) {
+  const { model_result } = aiConclusionRes || {};
+  if (aiConclusionRes?.code !== 0 || !model_result) {
+    const errorMessage =
+      aiConclusionRes?.code === -101
+        ? '登录 B 站后可使用 AI 视频总结'
+        : aiConclusionRes?.message || '当前视频暂不支持 AI 视频总结';
     aiCard = `
-    <div class="biliplus-ai-conclusion-card-header">当前视频暂不支持AI视频总结</div>
+    <div class="biliplus-ai-conclusion-card-header">${errorMessage}</div>
     `;
   } else {
     aiCard = `
@@ -235,7 +288,7 @@ const genterateAIConclusionCard = (aiConclusionRes, aiCardElement, bvid) => {
     ${model_result.summary}
     </div>
     `;
-    model_result.outline.forEach(item => {
+    (model_result.outline || []).forEach(item => {
       aiCard += `
       <div class="biliplus-ai-conclusion-card-selection">
         <div class="biliplus-ai-conclusion-card-selection-title">${item.title}</div>
@@ -271,7 +324,8 @@ const createAICardElement = cardElement => {
   //根据屏幕滚动高度计算卡片位置
   div.style.top = cardElement.getBoundingClientRect().top + 'px';
   // div.style.top = (cardElement.getBoundingClientRect().top - 50) + 'px'
-  const feedCard = _UTILS.findParentElement(cardElement, e => e.className == 'feed-card' || e.classList[0] == 'bili-video-card');
+  const feedCard = cardElement.closest('.feed-card, .bili-video-card');
+  if (!feedCard) return div;
   feedCard.appendChild(div);
   //鼠标移出卡片消失
   feedCard.addEventListener('mouseleave', () => {

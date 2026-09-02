@@ -1,25 +1,34 @@
 body[biliplus-clean-mode] .recommended-container_floor-aside .container > *:nth-of-type(n + 8) {
-  margin-top: 0px !important;
+  margin-top: 0 !important;
 }
 
 body[biliplus-clean-mode] .recommended-container_floor-aside .container.is-version8 > *:nth-of-type(n + 13) {
-  margin-top: 0px !important;
+  margin-top: 0 !important;
+}
+
+body[biliplus-clean-mode] .recommended-swipe {
+  display: none !important;
+}
+
+/* Compact both ordinary holes and the former 2x2 carousel footprint. */
+body[biliplus-clean-mode] .recommended-container_floor-aside .container {
+  grid-auto-flow: row dense !important;
 }
 
 @media (max-width: 1139.9px) {
-  .recommended-container_floor-aside .container>*:nth-of-type(n + 6) {
-    margin-top: 0px !important;
+  body[biliplus-clean-mode] .recommended-container_floor-aside .container > *:nth-of-type(n + 6) {
+    margin-top: 0 !important;
   }
 }
 
 @media (min-width: 1140px) and (max-width: 1299.9px) {
-  .recommended-container_floor-aside .container>*:nth-of-type(n + 6) {
-    margin-top: 0px !important;
+  body[biliplus-clean-mode] .recommended-container_floor-aside .container > *:nth-of-type(n + 6) {
+    margin-top: 0 !important;
   }
 }
 
 @media (min-width: 1300px) and (max-width: 1399.9px) {
-  .recommended-container_floor-aside .container>*:nth-of-type(n + 6) {
-    margin-top: 0px !important;
+  body[biliplus-clean-mode] .recommended-container_floor-aside .container > *:nth-of-type(n + 6) {
+    margin-top: 0 !important;
   }
 }

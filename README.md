@@ -138,13 +138,18 @@ _Below is an example of how you can manual installing from source code._
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Clean Home Mode
-- [x] Feed Roll Back Button
-- [x] Summarize video in cover list by Bilibili AI
+- [x] Clean Home Mode with automatic grid backfill
+- [x] Feed history navigation with Bilibili-native icons and the R shortcut
+- [x] Hide live/ad cards, compact the grid, and reclaim live-room sidebar space
+- [x] Summarize video covers through Bilibili AI with the current login session
+- [x] Filter-bubble rejection mode for anonymous recommendation and public video-list requests
 - [x] Display the number of viewers on the video cover
 - [x] Hide all comments from a user by userID
-- [x] Hide Bilibili hot searches in the search box
-- [x] Stepless adjustment of video speed
+- [x] Clean search suggestions while preserving autocomplete and local history
+- [x] Bilibili-styled precise speed input, wheel/keyboard controls, and cross-video rate memory
+- [x] Automatic widescreen and configurable autoplay behavior
+- [x] A compact popup backed by a full-page settings center
+- [x] Restore invalid video titles, covers, and links through opt-in archive access
 - [ ] ......
 
 ## Patches
@@ -199,8 +204,6 @@ Project Link: [https://github.com/0xlau/biliplus](https://github.com/0xlau/bilip
 ## Acknowledgments
 
 * [Github-biliscope](https://github.com/gaogaotiantian/biliscope)
-* [DaisyUI](https://daisyui.com/)
-* [Tailwindcss](https://tailwindcss.com/)
 * [Chrome Extension Docs](https://developer.chrome.com/docs/extensions)
 * [Remixicon](https://remixicon.com/)
 * [Img Shields](https://shields.io)
