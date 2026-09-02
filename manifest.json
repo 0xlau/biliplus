@@ -9,7 +9,25 @@
   "content_scripts": [
     {
       "js": [
+        "scripts/information-cocoon-status.js"
+      ],
+      "matches": [
+        "https://*.bilibili.com/*"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "js": [
+        "scripts/common/md5.min.js",
         "scripts/common/utils.js",
+        "scripts/common/bilibili-api.js"
+      ],
+      "matches": [
+        "https://*.bilibili.com/*"
+      ]
+    },
+    {
+      "js": [
         "scripts/feed-roll-history-btn.js",
         "scripts/clean-home-page.js"
       ],
@@ -24,13 +42,11 @@
     },
     {
       "js": [
-        "scripts/common/md5.min.js",
-        "scripts/common/utils.js",
-        "scripts/common/bilibili-api.js",
         "scripts/global-patches.js",
         "scripts/cover-viewer.js",
         "scripts/ai-conclusion.js",
         "scripts/hide-hot-search-list.js",
+        "scripts/home-content-filter.js",
         "scripts/auto-subtitle.js"
       ],
       "matches": [
@@ -38,13 +54,12 @@
       ],
       "css": [
         "css/global.css",
-        "css/ai-conclusion.css"
+        "css/ai-conclusion.css",
+        "css/home-content-filter.css"
       ]
     },
     {
       "js": [
-        "scripts/common/utils.js",
-        "scripts/common/bilibili-api.js",
         "scripts/hide-user-comment.js",
         "scripts/stepless-video-rate.js"
       ],
@@ -57,22 +72,45 @@
         "css/global.css",
         "css/stepless-video-rate-btn.css"
       ]
+    },
+    {
+      "js": [
+        "scripts/invalid-video-info.js"
+      ],
+      "matches": [
+        "https://www.bilibili.com/video/*",
+        "https://www.bilibili.com/list/ml*",
+        "https://space.bilibili.com/*"
+      ],
+      "css": [
+        "css/invalid-video-info.css"
+      ]
     }
   ],
   "background": {
-    "service_worker": "scripts/background/api-listener.js"
+    "service_worker": "scripts/background/service-worker.js"
   },
   "permissions": [
     "storage",
     "webRequest",
+    "declarativeNetRequestWithHostAccess",
     "tabs"
   ],
   "host_permissions": [
-    "*://*.bilibili.com/x/player/wbi/v2"
+    "*://*.bilibili.com/x/player/wbi/v2",
+    "*://api.bilibili.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://www.biliplus.com/*",
+    "https://www.jijidown.com/*"
   ],
   "action": {
-    "default_popup": "settings/settings.html",
+    "default_popup": "settings/popup.html",
     "default_icon": "logo.png"
+  },
+  "options_ui": {
+    "page": "settings/settings.html",
+    "open_in_tab": true
   },
   "author": "timothy-lau@outlook.com"
 }

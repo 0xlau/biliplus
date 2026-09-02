@@ -1,72 +1,229 @@
 .stepless-video-rate-btn {
-  fill: #fff;
-  color: hsla(0, 0%, 100%, 0.8);
+  box-sizing: border-box;
+  color: #fff;
+  display: block !important;
+  flex: 0 0 50px;
+  font: 14px/22px -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  height: 32px;
+  margin: 0;
+  padding: 10px 0 0;
+  position: relative;
+  text-align: center;
+  width: 50px;
+  z-index: 3;
+}
+
+.stepless-video-rate-btn-result {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
   height: 22px;
   line-height: 22px;
   outline: 0;
-  position: relative;
-  text-align: center;
-  z-index: 2;
-  font-size: 14px;
-  width: auto;
-  margin-right: 10px;
+  padding: 0;
+  user-select: none;
+  width: 50px;
 }
-.stepless-video-rate-btn:hover {
+
+.stepless-video-rate-btn-result:hover,
+.stepless-video-rate-btn-result:focus-visible {
   color: #fff;
 }
-.stepless-video-rate-btn-result {
-  cursor: pointer;
-  font-weight: 600;
-  width: 100%;
-  user-select: none;
+
+.stepless-video-rate-btn-result:focus-visible {
+  border-radius: 2px;
+  outline: 1px solid #00aeec;
+  outline-offset: -1px;
 }
 
 .stepless-video-rate-box {
-  background: hsla(0, 0%, 8%, 0.9);
+  background: rgba(20, 20, 20, 0.9);
+  border: 0;
   border-radius: 2px;
   bottom: 41px;
-  display: none;
-  height: 100px;
+  box-shadow: none;
+  box-sizing: border-box;
+  color: #fff;
+  display: block !important;
   left: 50%;
-  margin-left: -16px;
+  opacity: 0 !important;
+  padding: 0;
+  pointer-events: none !important;
   position: absolute;
-  width: 32px;
+  transform: translateX(-50%) !important;
+  transition: opacity 80ms ease-out, visibility 80ms;
+  visibility: hidden !important;
+  width: 200px !important;
 }
 
-.stepless-video-rate-box.display {
+.stepless-video-rate-btn.is-open .stepless-video-rate-box {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateX(-50%) !important;
+  visibility: visible !important;
+}
+
+.stepless-video-rate-editor {
+  align-items: center;
+  display: flex;
+  height: 36px;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.stepless-video-rate-input-label {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  height: 36px;
+  justify-content: center;
+  padding: 0;
+}
+
+.stepless-video-rate-input-label:focus-within {
+  color: #00aeec;
+}
+
+.stepless-video-rate-input {
+  appearance: textfield;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  flex: 1;
+  font: 14px/36px -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-variant-numeric: tabular-nums;
+  min-width: 0;
+  outline: 0;
+  padding: 0;
+  text-align: right;
+}
+
+.stepless-video-rate-input::-webkit-inner-spin-button,
+.stepless-video-rate-input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.stepless-video-rate-reset-btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  height: 36px;
+  line-height: 36px;
+  padding: 0;
+  width: 46px;
+}
+
+.stepless-video-rate-reset-btn:hover {
+  color: #00aeec;
+}
+
+.stepless-video-rate-reset-btn:focus-visible {
+  color: #00aeec;
+  outline: 1px solid #00aeec;
+  outline-offset: -1px;
+}
+
+.stepless-video-rate-range {
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
   display: block;
+  height: 36px;
+  margin: 0 10px;
+  padding: 0;
+  width: calc(100% - 20px);
 }
 
-.stepless-video-rate-number {
-  color: #e5e9ef;
+.stepless-video-rate-range::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.3);
+  border: 0;
+  border-radius: 1px;
+  height: 2px;
+}
+
+.stepless-video-rate-range::-webkit-slider-thumb {
+  appearance: none;
+  background: #fff;
+  border: 0;
+  border-radius: 50%;
+  height: 10px;
+  margin-top: -4px;
+  width: 10px;
+}
+
+.stepless-video-rate-range:hover::-webkit-slider-thumb,
+.stepless-video-rate-range:focus-visible::-webkit-slider-thumb {
+  background: #00aeec;
+}
+
+.stepless-video-rate-range:focus-visible {
+  outline: 1px solid #00aeec;
+  outline-offset: -1px;
+}
+
+.stepless-video-rate-help {
+  color: rgba(255, 255, 255, 0.65);
   font-size: 12px;
-  height: 28px;
-  line-height: 28px;
-  margin-bottom: 2px;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 10px;
   text-align: center;
-  width: 100%;
+  white-space: nowrap;
 }
 
-.stepless-video-rate-progress {
-  height: 60px !important;
-  margin: 0 auto;
+.stepless-video-rate-sr-only {
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 
-.stepless-video-rate-progress .bui-area {
-  -webkit-box-pack: center !important;
-  -ms-flex-pack: center !important;
-  justify-content: center !important;
+/* 取消倒计时后只收起“接下来播放”，保留结束页的重播等原生操作。 */
+body.biliplus-autoplay-ending-blocked .bpx-player-ending-related {
+  display: none !important;
 }
 
 @media screen and (min-width: 750px) {
   .bpx-player-container[data-screen='full'] .stepless-video-rate-btn,
   .bpx-player-container[data-screen='web'] .stepless-video-rate-btn {
-    height: 43px;
-    line-height: 32px;
     font-size: 16px;
+    height: 43px;
+    padding-top: 11px;
+    line-height: 32px;
   }
+
+  .bpx-player-container[data-screen='full'] .stepless-video-rate-btn-result,
+  .bpx-player-container[data-screen='web'] .stepless-video-rate-btn-result {
+    height: 32px;
+    line-height: 32px;
+  }
+
   .bpx-player-container[data-screen='full'] .stepless-video-rate-box,
   .bpx-player-container[data-screen='web'] .stepless-video-rate-box {
-    bottom: 74px;
+    bottom: 65px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepless-video-rate-box {
+    transition: none;
   }
 }

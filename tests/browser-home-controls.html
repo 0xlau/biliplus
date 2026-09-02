@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>BiliPlus home controls browser fixture</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/home-content-filter.css" />
+    <link rel="stylesheet" href="../css/feed-roll-history-btn.css" />
+    <style>
+      .container {
+        display: grid;
+        grid-template-columns: repeat(3, 120px);
+      }
+      .player-and-aside-area {
+        display: flex;
+        width: 600px;
+      }
+      #player-ctnr {
+        width: 300px;
+      }
+      #aside-area-vm {
+        width: 300px;
+      }
+    </style>
+    <script>
+      const settings = {
+        'biliplus-enable': true,
+        'hide-live-content': true,
+        'hide-ad-content': true,
+        'feed-roll-history-btn': true,
+      };
+      const storageListeners = [];
+      // Content scripts normally run at https://www.bilibili.com/. This local
+      // fixture opts into the same route without weakening production routing.
+      window.__BILIPLUS_BROWSER_TEST__ = true;
+      window.chrome = {
+        storage: {
+          sync: {
+            get(_keys, callback) {
+              callback({ ...settings });
+            },
+          },
+          onChanged: {
+            addListener(listener) {
+              storageListeners.push(listener);
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body>
+    <main class="recommended-container_floor-aside">
+      <div class="container" id="feed">
+        <article class="feed-card" id="normal-card">
+          <a href="https://www.bilibili.com/video/BV1">普通视频</a>
+        </article>
+        <article class="feed-card" id="live-card">
+          <a href="//live.bilibili.com/123">主播房间</a>
+        </article>
+        <article class="feed-card" id="ad-card">
+          <a href="https://www.bilibili.com/video/BV2">广告视频</a>
+          <span class="bili-video-card__info--ad">广告</span>
+        </article>
+        <div id="nested-ad-slot">
+          <article class="feed-card" id="nested-ad-card">
+            <a href="https://cm.bilibili.com/campaign">嵌套广告</a>
+          </article>
+        </div>
+        <article class="feed-card" id="normal-card-2">
+          <a href="https://www.bilibili.com/video/BV3">另一个普通视频</a>
+        </article>
+      </div>
+      <div class="feed-roll-btn">
+        <button type="button" class="primary-btn roll-btn">换一换</button>
+      </div>
+    </main>
+
+    <section class="player-and-aside-area">
+      <div class="left-container" id="player-ctnr">播放器</div>
+      <aside class="aside-area" id="aside-area-vm">直播聊天侧栏</aside>
+    </section>
+
+    <pre id="result">RUNNING</pre>
+
+    <script src="../scripts/home-content-filter.js"></script>
+    <script src="../scripts/feed-roll-history-btn.js"></script>
+    <script>
+      const waitForMicrotasks = () =>
+        new Promise(resolve => window.setTimeout(resolve, 20));
+      const assert = (condition, message) => {
+        if (!condition) {
+          throw new Error(message);
+        }
+      };
+
+      window.addEventListener('load', async () => {
+        try {
+          await waitForMicrotasks();
+
+          assert(
+            !document
+              .getElementById('normal-card')
+              .classList.contains('biliplus-filtered-live-content'),
+            'normal videos must stay visible'
+          );
+          assert(
+            document
+              .getElementById('live-card')
+              .classList.contains('biliplus-filtered-live-content'),
+            'live cards must be filtered'
+          );
+          assert(
+            document
+              .getElementById('ad-card')
+              .classList.contains('biliplus-filtered-ad-content'),
+            'ad cards must be filtered'
+          );
+          assert(
+            document
+              .getElementById('nested-ad-slot')
+              .classList.contains('biliplus-filtered-ad-content') &&
+              !document
+                .getElementById('nested-ad-card')
+                .classList.contains('biliplus-filtered-ad-content'),
+            'nested ads must hide the direct grid item rather than leave an empty slot'
+          );
+          assert(
+            document.getElementById('normal-card').offsetTop ===
+              document.getElementById('normal-card-2').offsetTop,
+            'visible cards must close hidden-card grid gaps'
+          );
+          assert(
+            getComputedStyle(document.getElementById('aside-area-vm')).display ===
+              'none',
+            'live sidebar must be hidden'
+          );
+          assert(
+            getComputedStyle(document.getElementById('player-ctnr')).width ===
+              '600px',
+            'player must reclaim sidebar width'
+          );
+
+          const dynamicCard = document.createElement('article');
+          dynamicCard.id = 'dynamic-live-card';
+          dynamicCard.className = 'feed-card';
+          dynamicCard.innerHTML = '<span class="rcmd-tag">直播中</span>';
+          document.getElementById('feed').appendChild(dynamicCard);
+          await waitForMicrotasks();
+          assert(
+            dynamicCard.classList.contains('biliplus-filtered-live-content'),
+            'dynamically inserted live cards must be filtered'
+          );
+
+          settings['hide-live-content'] = false;
+          for (const listener of storageListeners) {
+            listener(
+              { 'hide-live-content': { oldValue: true, newValue: false } },
+              'sync'
+            );
+          }
+          await waitForMicrotasks();
+          assert(
+            !dynamicCard.classList.contains('biliplus-filtered-live-content'),
+            'turning the live filter off must restore cards without a reload'
+          );
+
+          settings['hide-ad-content'] = false;
+          for (const listener of storageListeners) {
+            listener(
+              { 'hide-ad-content': { oldValue: true, newValue: false } },
+              'sync'
+            );
+          }
+          await waitForMicrotasks();
+          assert(
+            !document
+              .getElementById('ad-card')
+              .classList.contains('biliplus-filtered-ad-content') &&
+              !document
+                .getElementById('nested-ad-slot')
+                .classList.contains('biliplus-filtered-ad-content') &&
+              !document.documentElement.hasAttribute(
+                'biliplus-hide-ad-content'
+              ),
+            'turning every filter off must restore cards and root attributes'
+          );
+
+          settings['hide-live-content'] = true;
+          settings['hide-ad-content'] = true;
+          for (const listener of storageListeners) {
+            listener(
+              {
+                'hide-live-content': { oldValue: false, newValue: true },
+                'hide-ad-content': { oldValue: false, newValue: true },
+              },
+              'sync'
+            );
+          }
+          await waitForMicrotasks();
+          assert(
+            dynamicCard.classList.contains('biliplus-filtered-live-content') &&
+              document
+                .getElementById('ad-card')
+                .classList.contains('biliplus-filtered-ad-content'),
+            're-enabling filters must rescan the existing DOM'
+          );
+
+          assert(
+            document.getElementById('feed-roll-back-btn') &&
+              document.getElementById('feed-roll-next-btn'),
+            'history controls must mount next to the native roll button'
+          );
+
+          let rollPage = 1;
+          document.querySelector('.roll-btn').addEventListener('click', () => {
+            rollPage += 1;
+            const currentCards = [...document.querySelectorAll('.feed-card')];
+            currentCards.forEach((card, index) => {
+              const replacement = document.createElement('article');
+              replacement.className = 'feed-card';
+              replacement.id = `native-page-${rollPage}-card-${index}`;
+              replacement.innerHTML =
+                `<a href="https://www.bilibili.com/video/BV${rollPage}${index}">` +
+                `第 ${rollPage} 页推荐 ${index + 1}</a>`;
+              card.replaceWith(replacement);
+            });
+          });
+
+          const initialLiveCard = document.getElementById('live-card');
+          document.querySelector('.roll-btn').click();
+          await waitForMicrotasks();
+          assert(
+            !document.getElementById('feed-roll-back-btn').disabled,
+            'history back must enable after the native feed changes'
+          );
+
+          document.getElementById('feed-roll-back-btn').click();
+          await waitForMicrotasks();
+          assert(
+            document.getElementById('live-card') === initialLiveCard &&
+              initialLiveCard.classList.contains(
+                'biliplus-filtered-live-content'
+              ),
+            'restored nodes must preserve identity and be reclassified while filters are enabled'
+          );
+
+          document.getElementById('feed-roll-next-btn').click();
+          await waitForMicrotasks();
+          settings['hide-live-content'] = false;
+          settings['hide-ad-content'] = false;
+          for (const listener of storageListeners) {
+            listener(
+              {
+                'hide-live-content': { oldValue: true, newValue: false },
+                'hide-ad-content': { oldValue: true, newValue: false },
+              },
+              'sync'
+            );
+          }
+          await waitForMicrotasks();
+
+          document.getElementById('feed-roll-back-btn').click();
+          await waitForMicrotasks();
+          assert(
+            document.getElementById('live-card') === initialLiveCard &&
+              !initialLiveCard.classList.contains(
+                'biliplus-filtered-live-content'
+              ) &&
+              !initialLiveCard.hasAttribute('data-biliplus-filter-reason') &&
+              getComputedStyle(initialLiveCard).display !== 'none',
+            'restoring a detached snapshot must not retain disabled filter state'
+          );
+
+          settings['feed-roll-history-btn'] = false;
+          for (const listener of storageListeners) {
+            listener(
+              {
+                'feed-roll-history-btn': { oldValue: true, newValue: false },
+              },
+              'sync'
+            );
+          }
+          await waitForMicrotasks();
+          assert(
+            !document.getElementById('live-card') &&
+              document.querySelector('[id^="native-page-2-card-"]') &&
+              !document.getElementById('feed-roll-back-btn'),
+            'disabling history while browsing an old page must restore the native feed'
+          );
+
+          document.getElementById('result').textContent = 'PASS';
+          document.documentElement.setAttribute('data-test-result', 'pass');
+        } catch (error) {
+          document.getElementById('result').textContent = `FAIL: ${error.message}`;
+          document.documentElement.setAttribute('data-test-result', 'fail');
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,98 +1,253 @@
-<html lang="zh" class="bg-base-200">
+<!doctype html>
+<html lang="zh-CN">
   <head>
-    <title>BiliPlus</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
-    <link href="./css/daisyUI.css" rel="stylesheet" type="text/css" />
-    <script src="./js/common/tailwindcss.js"></script>
-    <script src="./js/common/jquery-3.7.1.min.js"></script>
-    <script src="./js/settings.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>BiliPlus 设置</title>
+    <link rel="stylesheet" href="./css/settings.css" />
+    <script src="./js/settings.js" defer></script>
   </head>
-  <body class="w-max min-w-96">
-    <div class="navbar bg-base-100">
-      <div class="flex-1">
-        <a class="btn btn-ghost text-xl text-grey-600 fill-blue-600" href="https://github.com/0xlau/biliplus" target="_blank" rel="noopener noreferrer">
-          <!-- <svg class="w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path
-              d="M7.17157 2.75737L10.414 5.99948H13.585L16.8284 2.75737C17.219 2.36685 17.8521 2.36685 18.2426 2.75737C18.6332 3.1479 18.6332 3.78106 18.2426 4.17158L16.414 5.99948L18.5 6.00001C20.433 6.00001 22 7.56701 22 9.50001V17.5C22 19.433 20.433 21 18.5 21H5.5C3.567 21 2 19.433 2 17.5V9.50001C2 7.56701 3.567 6.00001 5.5 6.00001L7.585 5.99948L5.75736 4.17158C5.36684 3.78106 5.36684 3.1479 5.75736 2.75737C6.14788 2.36685 6.78105 2.36685 7.17157 2.75737ZM18.5 8.00001H5.5C4.7203 8.00001 4.07955 8.5949 4.00687 9.35555L4 9.50001V17.5C4 18.2797 4.59489 18.9205 5.35554 18.9931L5.5 19H18.5C19.2797 19 19.9204 18.4051 19.9931 17.6445L20 17.5V9.50001C20 8.67158 19.3284 8.00001 18.5 8.00001ZM8 11C8.55228 11 9 11.4477 9 12V14C9 14.5523 8.55228 15 8 15C7.44772 15 7 14.5523 7 14V12C7 11.4477 7.44772 11 8 11ZM16 11C16.5523 11 17 11.4477 17 12V14C17 14.5523 16.5523 15 16 15C15.4477 15 15 14.5523 15 14V12C15 11.4477 15.4477 11 16 11Z"
-            ></path>
-          </svg> -->
-          <img class="w-8" title="logo" src="./img/logo_128.png" />
-          <span>BiliPlus</span>
-        </a>
+  <body class="options-page" aria-busy="true" data-master-enabled="false">
+    <header class="topbar">
+      <a class="brand" href="#overview" aria-label="BiliPlus 设置首页">
+        <img src="./img/logo_128.png" alt="" width="36" height="36" />
+        <span>BiliPlus</span>
+      </a>
+      <div class="save-state" id="save-state" role="status" aria-live="polite">
+        <span class="save-state__dot" aria-hidden="true"></span>
+        <span>正在读取设置…</span>
       </div>
-      <div class="flex-none">
-        <ul class="menu menu-horizontal px-1">
-          <li>
-            <a href="https://github.com/0xlau/biliplus/issues" target="_blank" rel="noopener noreferrer">提交意见</a>
-          </li>
-          <li>
-            <details>
-              <summary>关于项目</summary>
-              <ul class="p-2 bg-base-100 rounded-t-none">
-                <li>
-                  <a href="https://github.com/0xlau/biliplus" target="_blank" rel="noopener noreferrer">Github</a>
-                </li>
-                <li>
-                  <a href="https://github.com/0xlau" target="_blank" rel="noopener noreferrer">项目作者</a>
-                </li>
-              </ul>
-            </details>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="p-5 text-center">
-      <div class="form-control">
-        <label class="label cursor-pointer">
-          <div class="tooltip tooltip-right" data-tip="关闭后所有功能不作用">
-            <span class="label-text">BiliPlus 总开关</span>
-          </div>
-          <input type="checkbox" class="toggle" data-key="biliplus-enable" />
-        </label>
-        <label class="label cursor-pointer">
-          <span class="label-text">开启首页干净模式（去除大屏）</span>
-          <input type="checkbox" class="toggle" data-key="clean-home-page" />
-        </label>
-        <label class="label cursor-pointer">
-          <span class="label-text">开启首页“换一换”回溯功能</span>
-          <input type="checkbox" class="toggle" data-key="feed-roll-history-btn" />
-        </label>
-        <label class="label cursor-pointer">
-          <span class="label-text">开启视频封面 AI 总结</span>
-          <input type="checkbox" class="toggle" data-key="ai-conclusion" />
-        </label>
-        <label class="label cursor-pointer">
-          <span class="label-text">开启视频速度无级倍速</span>
-          <input type="checkbox" class="toggle" data-key="stepless-video-rate" />
-        </label>
-        <label class="label cursor-pointer">
-          <span class="label-text">开启自动打开字幕</span>
-          <input type="checkbox" class="toggle" data-key="auto-subtitle" />
-        </label>
-        <label class="label cursor-pointer">
-          <span class="label-text">关闭热搜排行榜</span>
-          <input type="checkbox" class="toggle" data-key="hide-hot-search-list" />
-        </label>
-        <label class="label cursor-pointer">
-          <div class="tooltip tooltip-right tooltip-error" data-tip="谨慎使用！">
-            <span class="label-text text-red-400">显示视频封面正在观看人数</span>
-          </div>
-          <input type="checkbox" class="toggle" data-key="cover-viewer" />
-        </label>
-        <a href="./settings-hide-user-comment.html">
-          <label class="label cursor-pointer">
-            <span class="label-text">隐藏指定用户评论</span>
+    </header>
 
-            <div class="flex flex-row items-center">
-              <div class="badge badge-neutral hidden" id="hide-user-comment-count">0</div>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
-              </svg>
-            </div>
-          </label>
+    <div class="settings-shell">
+      <nav class="settings-nav" aria-label="设置分类">
+        <a href="#overview" aria-current="location">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6v-9h-6v9Zm0-16v5h6V4h-6Z" /></svg>
+          概览
         </a>
-      </div>
+        <a href="#home">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-9Z" /></svg>
+          首页
+        </a>
+        <a href="#playback">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z" /></svg>
+          播放
+        </a>
+        <a href="#search">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m20 20-4.3-4.3m2.3-5.2a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" /></svg>
+          搜索
+        </a>
+        <a href="#tools">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" /></svg>
+          其他工具
+        </a>
+      </nav>
+
+      <main class="settings-main">
+        <section class="overview" id="overview" aria-labelledby="overview-title">
+          <div>
+            <h1 id="overview-title">按自己的方式看 B 站</h1>
+            <p>常用开关留在这里，具体能力按使用场景归类。所有改动自动保存，刷新已打开的 B 站页面后生效。</p>
+          </div>
+          <label class="master-switch">
+            <span>
+              <strong>BiliPlus 总开关</strong>
+              <small>关闭时保留配置，但暂停所有增强功能</small>
+            </span>
+            <input type="checkbox" data-setting="biliplus-enable" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+        </section>
+
+        <div class="pause-notice" id="pause-notice" role="status" hidden>
+          总开关已关闭。配置仍会保留；刷新已打开的 B 站页面后，全部增强停止运行。
+        </div>
+
+        <section class="setting-section" id="home" aria-labelledby="home-title">
+          <header class="section-heading">
+            <div>
+              <h2 id="home-title">首页更干净</h2>
+              <p>减少干扰内容，同时保留正常视频推荐和搜索入口。</p>
+            </div>
+          </header>
+
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>首页清爽模式</strong>
+              <small>移除顶部大屏，并修复推荐网格留下的空位</small>
+            </span>
+            <input type="checkbox" data-setting="clean-home-page" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>隐藏直播内容</strong>
+              <small>过滤首页和视频侧栏中的直播推荐，并收起直播间干扰侧栏</small>
+            </span>
+            <input type="checkbox" data-setting="hide-live-content" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>移除广告卡片</strong>
+              <small>隐藏广告推荐，并让后续视频自然补位</small>
+            </span>
+            <input type="checkbox" data-setting="hide-ad-content" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>“换一换”历史</strong>
+              <small>支持回退推荐；开启后可在首页按 R 换一批，输入文字时不会触发</small>
+            </span>
+            <input type="checkbox" data-setting="feed-roll-history-btn" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>拒绝信息茧房模式</strong>
+              <small>推荐、相关视频、热门排行和视频搜索列表不带 Cookie；播放、互动和账号请求仍保持登录</small>
+            </span>
+            <input type="checkbox" data-setting="reject-information-cocoon" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+        </section>
+
+        <section class="setting-section" id="playback" aria-labelledby="playback-title">
+          <header class="section-heading">
+            <div>
+              <h2 id="playback-title">播放更顺手</h2>
+              <p>精确调速、宽屏与连播行为集中管理，不再拆成一排零散开关。</p>
+            </div>
+          </header>
+
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>增强倍速控制</strong>
+              <small>支持数字输入、滚轮和 − / + 快捷键，双击恢复 1.0×</small>
+            </span>
+            <input type="checkbox" data-setting="stepless-video-rate" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>记住上次倍速</strong>
+              <small>切换分 P、合集、连播或新视频后自动恢复设定值</small>
+            </span>
+            <input type="checkbox" data-setting="video-rate-remember" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>自动进入宽屏</strong>
+              <small>打开视频后使用网页宽屏，不进入浏览器全屏</small>
+            </span>
+            <input type="checkbox" data-setting="auto-widescreen" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row setting-row--select">
+            <span class="setting-copy">
+              <strong>连播行为</strong>
+              <small>按场景决定视频结束后是否继续播放</small>
+            </span>
+            <select data-setting="autoplay-mode" aria-label="连播行为">
+              <option value="keep">跟随 B 站设置</option>
+              <option value="off">始终关闭连播</option>
+              <option value="playlist">仅合集与播放列表连播</option>
+            </select>
+          </label>
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>自动打开字幕</strong>
+              <small>检测到字幕后自动开启，切换分 P 也会重新应用</small>
+            </span>
+            <input type="checkbox" data-setting="auto-subtitle" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+        </section>
+
+        <section class="setting-section" id="search" aria-labelledby="search-title">
+          <header class="section-heading">
+            <div>
+              <h2 id="search-title">搜索只留有用信息</h2>
+              <p>一个开关完成热搜净化，搜索联想和自己的历史记录仍然保留。</p>
+            </div>
+          </header>
+
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>搜索净化与增强历史</strong>
+              <small>隐藏热榜和灰色热词，保留联想，并扩展本地搜索历史</small>
+            </span>
+            <input type="checkbox" data-setting="hide-hot-search-list" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row setting-row--select">
+            <span class="setting-copy">
+              <strong>历史记录数量</strong>
+              <small>仅保存在当前浏览器中，可随时在搜索框内清空</small>
+            </span>
+            <select data-setting="search-history-limit" data-setting-type="number" aria-label="搜索历史记录数量">
+              <option value="10">10 条</option>
+              <option value="20">20 条</option>
+              <option value="50">50 条</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="setting-section" id="tools" aria-labelledby="tools-title">
+          <header class="section-heading">
+            <div>
+              <h2 id="tools-title">其他工具</h2>
+              <p>不常调整的功能集中在这里，首页和播放设置保持简洁。</p>
+            </div>
+          </header>
+
+          <label class="setting-row">
+            <span class="setting-copy">
+              <strong>视频封面 AI 总结</strong>
+              <small>悬停视频卡片时读取内容摘要</small>
+            </span>
+            <input type="checkbox" data-setting="ai-conclusion" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row setting-row--warning">
+            <span class="setting-copy">
+              <strong>还原失效视频的封面和标题</strong>
+              <small>按需查询 biliplus 与 jijidown 归档；仅发送 av 号，首次开启会请求访问这两个站点</small>
+            </span>
+            <input type="checkbox" data-setting="invalid-video-info" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <label class="setting-row setting-row--warning">
+            <span class="setting-copy">
+              <strong>显示正在观看人数</strong>
+              <small>会增加接口请求，仅在确实需要时开启</small>
+            </span>
+            <input type="checkbox" data-setting="cover-viewer" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <a class="setting-row setting-link" href="./settings-hide-user-comment.html">
+            <span class="setting-copy">
+              <strong>隐藏指定用户评论</strong>
+              <small>管理已屏蔽的用户列表</small>
+            </span>
+            <span class="setting-link__meta">
+              <span class="count-badge" id="hide-user-comment-count" hidden>0</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" /></svg>
+            </span>
+          </a>
+        </section>
+
+        <footer class="settings-footer">
+          <span>BiliPlus <span id="extension-version">1.1.0</span></span>
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/0xlau/biliplus/issues" target="_blank" rel="noopener noreferrer">提交问题</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/0xlau/biliplus" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </footer>
+      </main>
     </div>
   </body>
 </html>

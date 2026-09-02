@@ -343,7 +343,9 @@ class _BILIAPI {
 }
    */
   static async getNavUserInfo() {
-    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/nav`);
+    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/nav`, {
+      credentials: 'include',
+    });
     const jsonData = await response.json();
     if (response.status !== 200 || !jsonData) {
       throw new Error();
@@ -358,11 +360,194 @@ class _BILIAPI {
    */
   static async getAIConclusion(params) {
     const query = await _UTILS.getwts(params);
-    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/view/conclusion/get?${query}`);
+    const response = await fetch(
+      `${_BILIAPI.BILIBILI_API}/x/web-interface/view/conclusion/get?${query}`,
+      { credentials: 'include' }
+    );
     const jsonData = await response.json();
     if (response.status !== 200 || !jsonData) {
       throw new Error();
     }
-    return jsonData.data;
+    return {
+      ...(jsonData.data || {}),
+      code: jsonData.code,
+      message: jsonData.message || '',
+    };
   }
+
+  /**
+   * 获取稿件 view 信息。失效或网络异常时不抛错，供错误页判断原因。
+   */
+  static async getVideoView({ aid, bvid }) {
+    const query = bvid ? `bvid=${encodeURIComponent(bvid)}` : `aid=${encodeURIComponent(aid)}`;
+    try {
+      const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/view?${query}`, {
+        credentials: 'include'
+      });
+      const jsonData = await response.json();
+      return {
+        code: jsonData?.code,
+        data: jsonData?.data || null,
+        message: jsonData?.message
+      };
+    } catch (error) {
+      return { code: -1, data: null, message: String(error) };
+    }
+  }
+
+  /** 获取视频分 P 列表，失败返回空数组。 */
+  static async getPageList(aid) {
+    try {
+      const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/player/pagelist?aid=${encodeURIComponent(aid)}`, {
+        credentials: 'include'
+      });
+      const jsonData = await response.json();
+      return jsonData?.code === 0 && Array.isArray(jsonData.data) ? jsonData.data : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /** 获取收藏夹当前分页，用于把失效占位卡与 aid 保守对齐。 */
+  static async getFavResourceList({ mediaId, pn = 1, ps = 20 }) {
+    const params = new URLSearchParams({
+      media_id: String(mediaId),
+      pn: String(pn),
+      ps: String(ps),
+      keyword: '',
+      order: 'mtime',
+      type: '0',
+      tid: '0',
+      platform: 'web'
+    });
+    try {
+      const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/v3/fav/resource/list?${params}`, {
+        credentials: 'include'
+      });
+      const jsonData = await response.json();
+      return jsonData?.code === 0 ? jsonData.data : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * 请求后台受限代理。content script 只提交 provider 与 aid，URL 由后台构造。
+   */
+  static fetchArchive(request) {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ type: 'biliplus-archive-fetch', ...request }, response => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+          return;
+        }
+        if (!response?.ok) {
+          const error = new Error(response?.error || 'archive fetch failed');
+          error.status = response?.status;
+          reject(error);
+          return;
+        }
+        resolve(response.json);
+      });
+    });
+  }
+
+  static isArchive503(json, error) {
+    if (json?.code === -503) return true;
+    if (!error) return false;
+    return error.status === 503 || /\b503\b/.test(String(error.message || ''));
+  }
+
+  /** 遇 HTTP/JSON -503 等 2 秒后再请求一次；都失败返回 null。 */
+  static async fetchArchiveJsonRetry503(request) {
+    const attempt = async () => {
+      try {
+        return { json: await this.fetchArchive(request), error: null };
+      } catch (error) {
+        return { json: null, error };
+      }
+    };
+    let { json, error } = await attempt();
+    if (this.isArchive503(json, error)) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      ({ json, error } = await attempt());
+    }
+    if (error || json?.code === -503) return null;
+    return json;
+  }
+
+  /** biliplus.com 批量稿件信息接口，每 20 个 aid 一组。 */
+  static async getBiliplusAidInfo(aids) {
+    const result = new Map();
+    const list = (aids || []).map(id => String(id)).filter(Boolean);
+    for (let index = 0; index < list.length; index += 20) {
+      const chunk = list.slice(index, index + 20);
+      const json = await this.fetchArchiveJsonRetry503({
+        provider: 'biliplus-aidinfo',
+        aids: chunk
+      });
+      if (json?.code !== 0 || !json.data) continue;
+      for (const [aid, info] of Object.entries(json.data)) {
+        if (!info) continue;
+        result.set(String(aid), {
+          aid: Number(aid),
+          title: info.title,
+          pic: info.pic,
+          author: info.author,
+          mid: info.mid
+        });
+      }
+    }
+    return result;
+  }
+
+  /** biliplus.com 单查稿件接口。 */
+  static async getBiliplusView(aid) {
+    const json = await this.fetchArchiveJsonRetry503({ provider: 'biliplus-view', aid });
+    if (!json || json.code === -404 || json.code === -403) return null;
+    const v2 = json.v2_app_api || {};
+    return {
+      aid: Number(json.aid || json.id || aid),
+      bvid: v2.bvid,
+      title: v2.title || json.title,
+      pic: v2.pic || json.pic,
+      first_frame: v2.first_frame,
+      author: v2.owner?.name || json.author,
+      mid: v2.owner?.mid || json.mid,
+      owner: v2.owner
+    };
+  }
+
+  /** jijidown.com 稿件信息接口，loading 状态最多轮询两次。 */
+  static async getJijidownInfo(aid) {
+    let json = null;
+    for (let attempt = 0; attempt <= 2; attempt++) {
+      try {
+        json = await this.fetchArchive({ provider: 'jijidown-info', aid });
+      } catch {
+        return null;
+      }
+      if (json && (json.msg === 'loading' || json.title === '正在加载数据...')) {
+        if (attempt < 2) {
+          await new Promise(resolve => setTimeout(resolve, 1200));
+          continue;
+        }
+        return null;
+      }
+      break;
+    }
+    if (!json || !json.upid || json.upid <= 0) return null;
+    if (!_UTILS.isUsableTitle(json.title, aid) && !json.img) return null;
+    return {
+      aid: Number(aid),
+      title: json.title,
+      pic: json.img,
+      author: json.up?.author,
+      mid: json.upid
+    };
+  }
+}
+
+if (typeof module === 'object' && module.exports) {
+  module.exports = _BILIAPI;
 }

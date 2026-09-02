@@ -1,53 +1,63 @@
-<html lang="zh" class="bg-base-200">
+<!doctype html>
+<html lang="zh-CN">
   <head>
-    <title>BiliPlus</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
-    <link href="./css/daisyUI.css" rel="stylesheet" type="text/css" />
-    <script src="./js/common/tailwindcss.js"></script>
-    <script src="./js/common/jquery-3.7.1.min.js"></script>
-    <script src="./js/settings-hide-user-comment.js"></script>
-    <script src="../scripts/common/bilibili-api.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>BiliPlus · 隐藏指定用户</title>
+    <link rel="stylesheet" href="./css/settings.css" />
+    <script src="../scripts/common/bilibili-api.js" defer></script>
+    <script src="./js/settings-hide-user-comment.js" defer></script>
   </head>
-  <body class="w-max min-w-96">
-    <div class="navbar bg-base-100">
-      <div class="flex-1">
-        <a title="asd" class="btn btn-ghost" href="./settings.html">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6">
-            <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
-          </svg>
-          <span>返回</span>
-        </a>
+  <body class="options-page detail-page" aria-busy="true">
+    <header class="topbar">
+      <a class="brand" href="./settings.html#tools" aria-label="返回 BiliPlus 设置">
+        <img src="./img/logo_128.png" alt="" width="36" height="36" />
+        <span>BiliPlus</span>
+      </a>
+      <div class="save-state" id="user-status" role="status" aria-live="polite" data-state="saving">
+        <span class="save-state__dot" aria-hidden="true"></span>
+        <span>正在读取屏蔽列表…</span>
       </div>
-      <div class="flex-none">
-        <ul class="menu menu-horizontal px-1">
-          <li>
-            <a href="https://github.com/0xlau/biliplus/issues" target="_blank" rel="noopener noreferrer">提交意见</a>
-          </li>
-          <li>
-            <details>
-              <summary>关于项目</summary>
-              <ul class="p-2 bg-base-100 rounded-t-none">
-                <li>
-                  <a href="https://github.com/0xlau/biliplus" target="_blank" rel="noopener noreferrer">Github</a>
-                </li>
-                <li>
-                  <a href="https://github.com/0xlau" target="_blank" rel="noopener noreferrer">项目作者</a>
-                </li>
-              </ul>
-            </details>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="p-5 text-center">
-      <div class="mb-3">
-        <label class="input input-bordered flex items-center gap-2 input-md w-full">
-          <input id="userIdBox" type="text" class="grow" placeholder="输入b站用户名称或uid" />
-          <kbd class="kbd kbd-sm">↵ 回车添加</kbd>
-        </label>
-      </div>
-      <div class="grid grid-cols-3 gap-2" id="userList"></div>
-    </div>
+    </header>
+
+    <main class="detail-shell">
+      <a class="back-link" href="./settings.html#tools">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" /></svg>
+        返回其他工具
+      </a>
+
+      <header class="detail-hero">
+        <h1>隐藏指定用户评论</h1>
+        <p>按用户名或 UID 添加屏蔽对象。设置保存在浏览器同步存储中，刷新视频页后完全生效。</p>
+      </header>
+
+      <section class="setting-section user-manager" aria-labelledby="add-user-title">
+        <header class="section-heading">
+          <div>
+            <h2 id="add-user-title">添加用户</h2>
+            <p>优先使用完整用户名或数字 UID，以避免匹配到同名账号。</p>
+          </div>
+        </header>
+        <form class="user-form" id="user-form">
+          <label for="user-id-box">B 站用户名或 UID</label>
+          <div class="user-search-row">
+            <input id="user-id-box" name="user" type="text" autocomplete="off" required disabled placeholder="例如：码农小易 或 393341686" />
+            <button class="primary-action" id="add-user" type="submit" disabled>添加</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="setting-section user-manager" aria-labelledby="hidden-users-title">
+        <header class="section-heading">
+          <div>
+            <h2 id="hidden-users-title" tabindex="-1">已隐藏用户</h2>
+            <p>移除后不会恢复已经从当前页面隐藏的评论，刷新视频页即可重新显示。</p>
+          </div>
+        </header>
+        <p class="empty-state" id="empty-state" hidden>还没有隐藏任何用户。</p>
+        <div class="user-grid" id="user-list"></div>
+      </section>
+    </main>
   </body>
 </html>

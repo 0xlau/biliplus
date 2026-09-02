@@ -1,0 +1,36 @@
+/* Hidden cards leave normal grid flow, so following cards close the gap. */
+.biliplus-filtered-live-content,
+.biliplus-filtered-ad-content {
+  display: none !important;
+}
+
+/* Backfill gaps left by wide/special recommendation cards. */
+html[biliplus-hide-live-content] .recommended-container_floor-aside .container,
+html[biliplus-hide-ad-content] .recommended-container_floor-aside .container {
+  grid-auto-flow: row dense;
+}
+
+/* Live-room focus mode: remove the chat/rank rail and reclaim its width. */
+html[biliplus-hide-live-content] #aside-area-vm,
+html[biliplus-hide-live-content] .player-and-aside-area > .aside-area,
+html[biliplus-hide-live-content] .aside-area-toggle-btn {
+  display: none !important;
+}
+
+html[biliplus-hide-live-content] .player-and-aside-area > .left-container,
+html[biliplus-hide-live-content] #player-ctnr {
+  width: 100% !important;
+}
+
+/* Newer live rooms reserve the chat rail as a second grid track. */
+html[biliplus-hide-live-content] .player-and-aside-area {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+html[biliplus-hide-live-content] body.player-full-win #fullscreen-container {
+  right: 0 !important;
+}
+
+html[biliplus-hide-live-content] body.player-full-win .player-section {
+  width: 100% !important;
+}
