@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/0xlau/biliplus/compare/v1.1.0...v1.2.0) (2026-09-02)
+
+
+### Features
+
+* modernize home, playback, search, and recovery tools ([#225](https://github.com/0xlau/biliplus/issues/225)) ([5dd7758](https://github.com/0xlau/biliplus/commit/5dd775856ac64c5d3451220cb6481b8b5b4e21e7))
+
 ## [1.1.0](https://github.com/0xlau/biliplus/compare/v1.0.3...v1.1.0) (2026-09-01)
 
 
