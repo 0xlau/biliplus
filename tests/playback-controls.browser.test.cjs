@@ -66,13 +66,38 @@ test('playback controls survive realistic DOM replacement', {
   await page.route('https://www.bilibili.com/**', (route) => route.fulfill({
     contentType: 'text/html',
     body: `<!doctype html>
-      <html><body>
+      <html><head>
+        <style>
+          .bpx-player-control-bottom-right {
+            align-items: flex-end;
+            display: flex;
+            height: 35px;
+          }
+          .bpx-player-ctrl-btn,
+          .fixture-control {
+            display: block;
+            height: 22px;
+            line-height: 22px;
+          }
+          @media screen and (min-width: 750px) {
+            .bpx-player-container[data-screen='web'] .bpx-player-ctrl-btn,
+            .bpx-player-container[data-screen='web'] .fixture-control,
+            .bpx-player-container[data-screen='full'] .bpx-player-ctrl-btn,
+            .bpx-player-container[data-screen='full'] .fixture-control {
+              height: 32px;
+              line-height: 32px;
+            }
+          }
+        </style>
+      </head><body>
         <div id="bilibili-player">
           <div class="bpx-player-container" data-screen="normal">
             <div class="bpx-player-video-wrap"><video></video></div>
             <div class="bpx-player-control-bottom-right">
+              <div class="fixture-control fixture-quality">1080P 高清</div>
+              <div class="fixture-control fixture-subtitle">字幕</div>
               <div class="bpx-player-ctrl-btn bpx-player-ctrl-playbackrate">倍速</div>
-              <button class="bpx-player-ctrl-wide" type="button">宽屏</button>
+              <button class="bpx-player-ctrl-wide fixture-control" type="button">宽屏</button>
             </div>
           </div>
         </div>
@@ -96,12 +121,57 @@ test('playback controls survive realistic DOM replacement', {
   await page.waitForSelector('.stepless-video-rate-btn');
   await page.waitForFunction(() => document.querySelector('video').playbackRate === 2.25);
 
+  const assertGeometry = async (screen) => {
+    await page.locator('.bpx-player-container').evaluate((element, nextScreen) => {
+      element.dataset.screen = nextScreen;
+    }, screen);
+    const geometry = await page.evaluate(() => {
+      const custom = document.querySelector('.stepless-video-rate-btn');
+      const quality = document.querySelector('.fixture-quality');
+      const subtitle = document.querySelector('.fixture-subtitle');
+      const bar = document.querySelector('.bpx-player-control-bottom-right');
+      const panel = document.querySelector('.stepless-video-rate-box');
+      const customRect = custom.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      return {
+        customTop: customRect.top,
+        qualityTop: quality.getBoundingClientRect().top,
+        subtitleTop: subtitle.getBoundingClientRect().top,
+        customBottom: customRect.bottom,
+        barBottom: bar.getBoundingClientRect().bottom,
+        panelBottom: panelRect.bottom
+      };
+    });
+    assert.ok(Math.abs(geometry.customTop - geometry.qualityTop) <= 1, `${screen}: custom rate control should align with quality control`);
+    assert.ok(Math.abs(geometry.customTop - geometry.subtitleTop) <= 1, `${screen}: custom rate control should align with subtitle control`);
+    assert.ok(geometry.customBottom <= geometry.barBottom + 1, `${screen}: custom rate control should remain inside the control bar`);
+    assert.ok(Math.abs(geometry.panelBottom - geometry.customTop) <= 1, `${screen}: rate panel should touch the trigger without a hover dead zone`);
+  };
+
   assert.equal(await page.locator('.stepless-video-rate-btn-value').textContent(), '2.25x');
+  assert.equal(await page.locator('[data-biliplus-control="stepless-video-rate"]').count(), 1);
   assert.equal(
     await page
       .locator('.bpx-player-ctrl-playbackrate:not([data-biliplus-control])')
       .evaluate((element) => getComputedStyle(element).display),
     'none',
+  );
+  await assertGeometry('normal');
+  await assertGeometry('web');
+  await assertGeometry('full');
+
+  await page.locator('.bpx-player-control-bottom-right').evaluate((bar) => {
+    bar.innerHTML = bar.innerHTML;
+  });
+  await page.waitForFunction(
+    () => document.querySelectorAll('[data-biliplus-control="stepless-video-rate"]').length === 1,
+    null,
+    { timeout: 3000 }
+  );
+  assert.equal(await page.locator('[data-biliplus-control="stepless-video-rate"]').count(), 1);
+  assert.equal(
+    await page.locator('.bpx-player-ctrl-playbackrate:not([data-biliplus-control])').count(),
+    1
   );
   assert.equal(await page.locator('.bpx-player-ctrl-wide').evaluate((element) => element.classList.contains('bpx-state-entered')), true);
 
