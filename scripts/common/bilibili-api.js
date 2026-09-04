@@ -212,7 +212,7 @@ class _BILIAPI {
     }
   */
   static async getUserInfoByKeyword(keyword) {
-    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/wbi/search/type?search_type=bili_user&keyword=${keyword}`);
+    const response = await fetch(`${_BILIAPI.BILIBILI_API}/x/web-interface/wbi/search/type?search_type=bili_user&keyword=${encodeURIComponent(keyword)}`);
     const jsonData = await response.json();
     if (response.status !== 200 || !jsonData) {
       throw new Error();
