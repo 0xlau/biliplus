@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/0xlau/biliplus/compare/v1.2.0...v1.2.1) (2026-09-06)
+
+
+### Bug Fixes
+
+* harden stepless playback control lifecycle ([#228](https://github.com/0xlau/biliplus/issues/228)) ([0bd6c26](https://github.com/0xlau/biliplus/commit/0bd6c26a68e829709ef24b0aaea591257990634c))
+* V-001 security vulnerability ([#224](https://github.com/0xlau/biliplus/issues/224)) ([33fbf9f](https://github.com/0xlau/biliplus/commit/33fbf9f36e0c706752f4e53fc78c617974d65311))
+
 ## [1.2.0](https://github.com/0xlau/biliplus/compare/v1.1.0...v1.2.0) (2026-09-02)
 
 
