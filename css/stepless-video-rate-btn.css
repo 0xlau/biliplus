@@ -1,13 +1,10 @@
 .stepless-video-rate-btn {
-  box-sizing: border-box;
   color: #fff;
   display: block !important;
   flex: 0 0 50px;
   font: 14px/22px -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
     Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  height: 32px;
   margin: 0;
-  padding: 10px 0 0;
   position: relative;
   text-align: center;
   width: 50px;
@@ -22,8 +19,6 @@
   cursor: pointer;
   font: inherit;
   font-weight: 600;
-  height: 22px;
-  line-height: 22px;
   outline: 0;
   padding: 0;
   user-select: none;
@@ -45,7 +40,9 @@
   background: rgba(20, 20, 20, 0.9);
   border: 0;
   border-radius: 2px;
-  bottom: 41px;
+  /* Keep the panel attached to the trigger so moving the pointer into it
+     does not cross a dead zone and repeatedly schedule hide/show timers. */
+  bottom: 100%;
   box-shadow: none;
   box-sizing: border-box;
   color: #fff;
@@ -205,21 +202,8 @@ body.biliplus-autoplay-ending-blocked .bpx-player-ending-related {
   .bpx-player-container[data-screen='full'] .stepless-video-rate-btn,
   .bpx-player-container[data-screen='web'] .stepless-video-rate-btn {
     font-size: 16px;
-    height: 43px;
-    padding-top: 11px;
-    line-height: 32px;
   }
 
-  .bpx-player-container[data-screen='full'] .stepless-video-rate-btn-result,
-  .bpx-player-container[data-screen='web'] .stepless-video-rate-btn-result {
-    height: 32px;
-    line-height: 32px;
-  }
-
-  .bpx-player-container[data-screen='full'] .stepless-video-rate-box,
-  .bpx-player-container[data-screen='web'] .stepless-video-rate-box {
-    bottom: 65px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

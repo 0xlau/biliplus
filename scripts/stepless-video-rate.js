@@ -15,6 +15,9 @@
   const RATE_TRANSITION_GUARD_MS = 3200;
   const RATE_REAPPLY_DELAYS = [0, 80, 260, 800, 1800, 3000];
   const AUTOPLAY_MODES = new Set(['keep', 'off', 'playlist']);
+  const RATE_CONTROL_SELECTOR = '[data-biliplus-control="stepless-video-rate"]';
+  const NATIVE_RATE_BUTTON_SELECTOR =
+    `.bpx-player-ctrl-btn.bpx-player-ctrl-playbackrate:not(${RATE_CONTROL_SELECTOR})`;
 
   const STORAGE_KEYS = {
     master: 'biliplus-enable',
@@ -536,9 +539,15 @@
   function removeRateUi() {
     clearTimeout(state.hideRatePanelTimer);
     state.hideRatePanelTimer = null;
-    if (state.rateUi && state.rateUi.root.isConnected) state.rateUi.root.remove();
+    document.querySelectorAll(RATE_CONTROL_SELECTOR).forEach(root => root.remove());
     state.rateUi = null;
     document.body && document.body.classList.remove('biliplus-stepless-video-rate');
+  }
+
+  function removeDuplicateRateUis(keepRoot = null) {
+    document.querySelectorAll(RATE_CONTROL_SELECTOR).forEach(root => {
+      if (root !== keepRoot) root.remove();
+    });
   }
 
   function createRateUi(controlBar, nativeRateButton) {
@@ -657,18 +666,24 @@
 
     document.body && document.body.classList.add('biliplus-stepless-video-rate');
 
-    if (state.rateUi && state.rateUi.root.isConnected) {
+    const nativeRateButton = document.querySelector(NATIVE_RATE_BUTTON_SELECTOR);
+    const controlBar = nativeRateButton && nativeRateButton.parentElement;
+    if (!nativeRateButton || !controlBar) return;
+
+    if (
+      state.rateUi &&
+      state.rateUi.root.isConnected &&
+      state.rateUi.root.parentElement === controlBar
+    ) {
+      removeDuplicateRateUis(state.rateUi.root);
       updateRateUi(rateKeeper.getDesiredRate());
       return;
     }
 
     clearTimeout(state.hideRatePanelTimer);
     state.hideRatePanelTimer = null;
+    removeDuplicateRateUis();
     state.rateUi = null;
-    const nativeRateButton = document.querySelector('.bpx-player-ctrl-btn.bpx-player-ctrl-playbackrate');
-    const controlBar = nativeRateButton && nativeRateButton.parentElement;
-    if (!nativeRateButton || !controlBar) return;
-
     createRateUi(controlBar, nativeRateButton);
   }
 
