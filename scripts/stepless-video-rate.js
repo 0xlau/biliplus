@@ -522,7 +522,11 @@
 
     const hide = () => {
       if (!state.rateUi) return;
-      if (state.rateUi.root.contains(document.activeElement)) return;
+      // Dragging the range keeps it focused after the pointer leaves the control.
+      if (
+        state.rateUi.root.contains(document.activeElement) &&
+        state.rateUi.root.matches(':hover')
+      ) return;
       state.rateUi.root.classList.remove('is-open');
       state.rateUi.panel.setAttribute('aria-hidden', 'true');
       state.rateUi.trigger.setAttribute('aria-expanded', 'false');
