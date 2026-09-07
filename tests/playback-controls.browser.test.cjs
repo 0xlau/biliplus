@@ -10,7 +10,8 @@ try {
   // Playwright 是可选的工作区测试依赖；普通贡献者仍可运行纯逻辑测试。
 }
 
-const chromeExecutable = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const chromeExecutable = process.env.PLAYWRIGHT_CHROME_EXECUTABLE ||
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const projectRoot = path.resolve(__dirname, '..');
 
 test('playback controls survive realistic DOM replacement', {
@@ -18,7 +19,7 @@ test('playback controls survive realistic DOM replacement', {
 }, async (t) => {
   const browser = await chromium.launch({
     executablePath: chromeExecutable,
-    headless: true
+    headless: process.env.PLAYWRIGHT_HEADLESS !== 'false'
   });
   t.after(() => browser.close());
 
@@ -175,6 +176,11 @@ test('playback controls survive realistic DOM replacement', {
   );
   assert.equal(await page.locator('.bpx-player-ctrl-wide').evaluate((element) => element.classList.contains('bpx-state-entered')), true);
 
+  await page.locator('.stepless-video-rate-btn-result').click();
+  await page.locator('.stepless-video-rate-range').focus();
+  await page.mouse.move(1, 1);
+  await page.waitForTimeout(320);
+  assert.equal(await page.locator('.stepless-video-rate-box').getAttribute('aria-hidden'), 'true');
   await page.locator('.stepless-video-rate-btn-result').click();
   await page.locator('.stepless-video-rate-input').fill('1.75');
   await page.locator('.stepless-video-rate-input').press('Enter');
