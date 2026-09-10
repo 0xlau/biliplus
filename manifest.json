@@ -88,7 +88,8 @@
     }
   ],
   "background": {
-    "service_worker": "scripts/background/service-worker.js"
+    "service_worker": "scripts/background/service-worker.js",
+    "scripts": ["scripts/background/service-worker.js"]
   },
   "permissions": [
     "storage",
@@ -111,6 +112,14 @@
   "options_ui": {
     "page": "settings/settings.html",
     "open_in_tab": true
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "biliplus@0xlau.dev",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
   },
   "author": "timothy-lau@outlook.com"
 }
