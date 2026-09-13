@@ -29,7 +29,8 @@
     {
       "js": [
         "scripts/feed-roll-history-btn.js",
-        "scripts/clean-home-page.js"
+        "scripts/clean-home-page.js",
+        "scripts/home-feed-time-sort.js"
       ],
       "matches": [
         "https://www.bilibili.com/*"
