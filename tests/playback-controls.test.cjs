@@ -83,6 +83,42 @@ test('safe shortcuts work outside editors and ignore browser modifiers', () => {
   assert.equal(getRateShortcutAction({ code: 'Equal', key: '=', ctrlKey: true, target: plainTarget }, plainTarget), null);
 });
 
+test('shortcuts ignore editable targets inside composed paths and shadow roots', () => {
+  const plainTarget = { tagName: 'DIV', closest: () => null };
+  const shadowEditor = { isContentEditable: true };
+  const shadowHost = {
+    tagName: 'BILI-COMMENT-EDITOR',
+    closest: () => null,
+    shadowRoot: { activeElement: shadowEditor }
+  };
+
+  assert.equal(
+    getRateShortcutAction({
+      code: 'Digit0',
+      key: '0',
+      target: shadowHost,
+      composedPath: () => [shadowEditor, shadowHost, plainTarget]
+    }, plainTarget),
+    null
+  );
+  assert.equal(
+    getRateShortcutAction({ code: 'Minus', key: '-', target: shadowHost }, shadowHost),
+    null
+  );
+
+  const plaintextEditor = {
+    tagName: 'DIV',
+    isContentEditable: false,
+    closest(selector) {
+      return selector.includes('[contenteditable]') ? this : null;
+    }
+  };
+  assert.equal(
+    getRateShortcutAction({ code: 'Equal', key: '+', target: plaintextEditor }, plainTarget),
+    null
+  );
+});
+
 test('remembered rate survives player replacement and initialization resets', () => {
   let now = 100;
   let remember = true;

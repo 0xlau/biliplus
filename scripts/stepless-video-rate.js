@@ -74,19 +74,33 @@
 
   function isEditableTarget(target) {
     if (!target || typeof target !== 'object') return false;
+    if (target.nodeType === 3) target = target.parentElement;
+    if (!target || typeof target !== 'object') return false;
     if (target.isContentEditable) return true;
 
     const tagName = String(target.tagName || '').toLowerCase();
     if (['input', 'textarea', 'select', 'button'].includes(tagName)) return true;
 
     if (typeof target.closest !== 'function') return false;
-    return Boolean(target.closest('input, textarea, select, button, [contenteditable="true"], [role="textbox"]'));
+    return Boolean(target.closest(
+      'input, textarea, select, button, [contenteditable], [role="textbox"], [role="searchbox"], [role="combobox"]'
+    ));
+  }
+
+  function getDeepActiveElement(activeElement) {
+    let current = activeElement;
+    while (current && current.shadowRoot && current.shadowRoot.activeElement) {
+      current = current.shadowRoot.activeElement;
+    }
+    return current;
   }
 
   function getRateShortcutAction(event, activeElement) {
     if (!event || event.defaultPrevented || event.isComposing) return null;
     if (event.ctrlKey || event.metaKey || event.altKey) return null;
-    if (isEditableTarget(event.target) || isEditableTarget(activeElement)) return null;
+    const eventPath = typeof event.composedPath === 'function' ? event.composedPath() : [];
+    if (eventPath.some(isEditableTarget)) return null;
+    if (isEditableTarget(event.target) || isEditableTarget(getDeepActiveElement(activeElement))) return null;
 
     const code = event.code || '';
     const key = event.key || '';
