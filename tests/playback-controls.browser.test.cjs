@@ -195,6 +195,30 @@ test('playback controls survive realistic DOM replacement', {
   assert.equal(await page.locator('video').evaluate((video) => video.playbackRate), 1.1);
 
   await page.evaluate(() => {
+    const textarea = document.createElement('textarea');
+    textarea.id = 'comment-input';
+    document.body.append(textarea);
+  });
+  await page.locator('#comment-input').focus();
+  await page.keyboard.type('0+-');
+  assert.equal(await page.locator('#comment-input').inputValue(), '0+-');
+  assert.equal(await page.locator('video').evaluate((video) => video.playbackRate), 1.1);
+
+  await page.evaluate(() => {
+    const commentHost = document.createElement('bili-comment-editor');
+    const shadow = commentHost.attachShadow({ mode: 'open' });
+    shadow.innerHTML = '<div id="comment-editor" contenteditable="plaintext-only"></div>';
+    document.body.append(commentHost);
+    shadow.querySelector('#comment-editor').focus();
+  });
+  await page.keyboard.type('0+-');
+  assert.equal(
+    await page.evaluate(() => document.querySelector('bili-comment-editor').shadowRoot.querySelector('#comment-editor').textContent),
+    '0+-'
+  );
+  assert.equal(await page.locator('video').evaluate((video) => video.playbackRate), 1.1);
+
+  await page.evaluate(() => {
     const oldVideo = document.querySelector('video');
     const replacement = document.createElement('video');
     oldVideo.replaceWith(replacement);
