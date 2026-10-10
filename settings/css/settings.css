@@ -200,7 +200,7 @@ svg {
 }
 
 .overview h1 {
-  max-width: 14ch;
+  max-width: 16ch;
   margin: 0 0 12px;
   font-size: clamp(2rem, 4vw, 2.8rem);
   line-height: 1.08;
