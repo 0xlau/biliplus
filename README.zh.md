@@ -163,7 +163,7 @@ _以下是如何从源代码手动安装的示例。_
 <!-- LICENSE -->
 ## 协议
 
-MIT License。可以查看 `LICENSE.txt` 获取更多详情。
+MIT License。可以查看 `LICENSE` 获取更多详情。
 
 <p align="right">(<a href="#readme-top">回到顶部</a>)</p>
 
