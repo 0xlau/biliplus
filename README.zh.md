@@ -163,7 +163,7 @@ _以下是如何从源代码手动安装的示例。_
 <!-- LICENSE -->
 ## 协议
 
-MIT License。可以查看 `LICENSE.txt` 获取更多详情。
+MIT License。可以查看 `LICENSE` 获取更多详情。
 
 <p align="right">(<a href="#readme-top">回到顶部</a>)</p>
 
@@ -203,6 +203,6 @@ MIT License。可以查看 `LICENSE.txt` 获取更多详情。
 [issues-shield]: https://img.shields.io/github/issues/0xlau/biliplus.svg?style=for-the-badge
 [issues-url]: https://github.com/0xlau/biliplus/issues
 [license-shield]: https://img.shields.io/github/license/0xlau/biliplus.svg?style=for-the-badge
-[license-url]: https://github.com/0xlau/biliplus/blob/master/LICENSE.txt
+[license-url]: https://github.com/0xlau/biliplus/blob/main/LICENSE
 [chrome-shield]: https://img.shields.io/badge/-Plugin_Download-black.svg?style=for-the-badge&colorB=555
 [chrome-url]: https://chrome.com/

@@ -183,7 +183,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -223,7 +223,7 @@ Project Link: [https://github.com/0xlau/biliplus](https://github.com/0xlau/bilip
 [issues-shield]: https://img.shields.io/github/issues/0xlau/biliplus.svg?style=for-the-badge
 [issues-url]: https://github.com/0xlau/biliplus/issues
 [license-shield]: https://img.shields.io/github/license/0xlau/biliplus.svg?style=for-the-badge
-[license-url]: https://github.com/0xlau/biliplus/blob/master/LICENSE.txt
+[license-url]: https://github.com/0xlau/biliplus/blob/main/LICENSE
 [chrome-shield]: https://img.shields.io/badge/-Plugin_Download-black.svg?style=for-the-badge&colorB=555
 [chrome-url]: https://chrome.com/
 
